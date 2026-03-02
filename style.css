@@ -1,7 +1,5 @@
-/* Import a clean professional font from Google */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
-/* Reset and base styles */
 * {
     margin: 0;
     padding: 0;
@@ -22,6 +20,9 @@ nav {
     position: sticky;
     top: 0;
     border-bottom: 2px solid #2E75B6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 nav h2 {
@@ -30,32 +31,44 @@ nav h2 {
     font-weight: 700;
 }
 
-/* Main content container */
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 60px 20px;
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav ul li a {
+    color: #aaaaaa;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #2E75B6;
 }
 
 /* Hero section */
 .hero {
     text-align: center;
-    padding: 80px 20px;
+    padding: 100px 20px;
     border-bottom: 1px solid #222;
 }
 
 .hero h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 700;
     color: #ffffff;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .hero h2 {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 300;
     color: #2E75B6;
     margin-bottom: 30px;
+    letter-spacing: 1px;
 }
 
 .hero p {
@@ -63,4 +76,21 @@ nav h2 {
     color: #aaaaaa;
     max-width: 700px;
     margin: 0 auto 16px auto;
+}
+
+.hero .btn {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 14px 36px;
+    background-color: #2E75B6;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color 0.3s;
+}
+
+.hero .btn:hover {
+    background-color: #1a5a9a;
 }
