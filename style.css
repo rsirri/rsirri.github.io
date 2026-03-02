@@ -1,0 +1,66 @@
+/* Import a clean professional font from Google */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0a0a0a;
+    color: #e0e0e0;
+    line-height: 1.7;
+}
+
+/* Navigation bar */
+nav {
+    background-color: #111111;
+    padding: 20px 40px;
+    position: sticky;
+    top: 0;
+    border-bottom: 2px solid #2E75B6;
+}
+
+nav h2 {
+    color: #2E75B6;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+/* Main content container */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+/* Hero section */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    border-bottom: 1px solid #222;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.hero h2 {
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: #2E75B6;
+    margin-bottom: 30px;
+}
+
+.hero p {
+    font-size: 1rem;
+    color: #aaaaaa;
+    max-width: 700px;
+    margin: 0 auto 16px auto;
+}
