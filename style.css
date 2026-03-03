@@ -304,3 +304,21 @@ footer p {
     font-size: 0.8rem !important;
     color: #333333 !important;
 }
+
+/* Active nav link */
+nav ul li a.active {
+    color: #2E75B6;
+    font-weight: 600;
+}
+
+/* Typing cursor effect */
+#typing-text::after {
+    content: '|';
+    color: #2E75B6;
+    animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
