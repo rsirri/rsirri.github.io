@@ -94,3 +94,142 @@ nav ul li a:hover {
 .hero .btn:hover {
     background-color: #1a5a9a;
 }
+
+/* Sections general */
+.section {
+    padding: 80px 20px;
+    border-bottom: 1px solid #222;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 40px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #2E75B6;
+    display: inline-block;
+}
+
+/* About section */
+.about-text p {
+    color: #aaaaaa;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    max-width: 700px;
+}
+
+/* Skills section */
+.skills-group {
+    margin-bottom: 36px;
+}
+
+.skills-category {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2E75B6;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+}
+
+.skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    row-gap: 125px;
+}
+
+.tag {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    border: 1px solid #333;
+    transition: all 0.3s;
+}
+
+.tag:hover {
+    background-color: #2E75B6;
+    color: #ffffff;
+    border-color: #2E75B6;
+}
+
+/* Currently learning tags - slightly different look */
+.tag-learning {
+    border-color: #2E75B6;
+    color: #2E75B6;
+    background-color: transparent;
+}
+
+.tag-learning:hover {
+    background-color: #2E75B6;
+    color: #ffffff;
+}
+
+/* Experience section */
+.job {
+    margin-bottom: 48px;
+    padding: 32px;
+    background-color: #111111;
+    border-radius: 8px;
+    border-left: 4px solid #2E75B6;
+    transition: transform 0.3s;
+}
+
+.job:hover {
+    transform: translateX(6px);
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.job-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.job-company {
+    font-size: 0.95rem;
+    color: #2E75B6;
+    font-weight: 400;
+}
+
+.job-date {
+    font-size: 0.85rem;
+    color: #666666;
+    white-space: nowrap;
+    margin-left: 20px;
+}
+
+.job-points {
+    list-style: none;
+    padding: 0;
+}
+
+.job-points li {
+    color: #aaaaaa;
+    font-size: 0.95rem;
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.job-points li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #2E75B6;
+}
