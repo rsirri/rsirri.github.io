@@ -97,3 +97,22 @@ function type() {
 
 // Start the typing animation when page loads
 type();
+
+// ================================
+// HAMBURGER MENU TOGGLE
+// ================================
+const hamburger = document.querySelector('#hamburger');
+const navMenu = document.querySelector('#nav-links');
+
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navMenu.classList.toggle('open');
+});
+
+// Close menu when a nav link is clicked
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        navMenu.classList.remove('open');
+    }); 
+});
