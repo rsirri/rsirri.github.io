@@ -407,3 +407,72 @@ footer p {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Employer card */
+.employer {
+    margin-bottom: 48px;
+    border: 1px solid #222;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.employer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px 28px;
+    background-color: #111111;
+    border-left: 4px solid #2E75B6;
+}
+
+.employer-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.employer-title {
+    font-size: 0.9rem;
+    color: #2E75B6;
+    font-weight: 400;
+}
+
+.employer-date {
+    font-size: 0.85rem;
+    color: #666666;
+    white-space: nowrap;
+    margin-left: 20px;
+}
+
+/* Client engagement nested inside employer */
+.client-engagement {
+    padding: 20px 28px;
+    border-top: 1px solid #1a1a1a;
+    background-color: #0d0d0d;
+}
+
+.client-engagement:hover {
+    background-color: #111111;
+}
+
+.client-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.client-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #e0e0e0;
+}
+
+.client-date {
+    font-size: 0.8rem;
+    color: #555555;
+    white-space: nowrap;
+}
