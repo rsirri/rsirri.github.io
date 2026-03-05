@@ -13,12 +13,13 @@ body {
     line-height: 1.7;
 }
 
-/* Navigation bar */
+/* Navigation */
 nav {
     background-color: #111111;
     padding: 20px 40px;
     position: sticky;
     top: 0;
+    z-index: 1000;
     border-bottom: 2px solid #2E75B6;
     display: flex;
     justify-content: space-between;
@@ -49,7 +50,12 @@ nav ul li a:hover {
     color: #2E75B6;
 }
 
-/* Hero section */
+nav ul li a.active {
+    color: #2E75B6;
+    font-weight: 600;
+}
+
+/* Hero */
 .hero {
     text-align: center;
     padding: 100px 20px;
@@ -69,6 +75,7 @@ nav ul li a:hover {
     color: #2E75B6;
     margin-bottom: 30px;
     letter-spacing: 1px;
+    min-height: 2rem;
 }
 
 .hero p {
@@ -95,7 +102,7 @@ nav ul li a:hover {
     background-color: #1a5a9a;
 }
 
-/* Sections general */
+/* Sections */
 .section {
     padding: 80px 20px;
     border-bottom: 1px solid #222;
@@ -116,7 +123,7 @@ nav ul li a:hover {
     display: inline-block;
 }
 
-/* About section */
+/* About */
 .about-text p {
     color: #aaaaaa;
     font-size: 1rem;
@@ -124,7 +131,7 @@ nav ul li a:hover {
     max-width: 700px;
 }
 
-/* Skills section */
+/* Skills */
 .skills-group {
     margin-bottom: 36px;
 }
@@ -142,7 +149,7 @@ nav ul li a:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    row-gap: 125px;
+    row-gap: 12px;
 }
 
 .tag {
@@ -161,7 +168,6 @@ nav ul li a:hover {
     border-color: #2E75B6;
 }
 
-/* Currently learning tags - slightly different look */
 .tag-learning {
     border-color: #2E75B6;
     color: #2E75B6;
@@ -173,7 +179,7 @@ nav ul li a:hover {
     color: #ffffff;
 }
 
-/* Experience section */
+/* Experience */
 .job {
     margin-bottom: 48px;
     padding: 32px;
@@ -234,7 +240,7 @@ nav ul li a:hover {
     color: #2E75B6;
 }
 
-/* Contact section */
+/* Contact */
 .contact-intro {
     color: #aaaaaa;
     font-size: 1rem;
@@ -292,6 +298,7 @@ footer {
     text-align: center;
     padding: 40px 20px;
     border-top: 1px solid #222;
+    margin-top: 60px;
 }
 
 footer p {
@@ -305,13 +312,7 @@ footer p {
     color: #333333 !important;
 }
 
-/* Active nav link */
-nav ul li a.active {
-    color: #2E75B6;
-    font-weight: 600;
-}
-
-/* Typing cursor effect */
+/* Typing cursor */
 #typing-text::after {
     content: '|';
     color: #2E75B6;
@@ -323,8 +324,8 @@ nav ul li a.active {
     50% { opacity: 0; }
 }
 
-/* Hamburger button - hidden on desktop */
-.hamburger { 
+/* Hamburger */
+.hamburger {
     display: none;
     flex-direction: column;
     gap: 5px;
@@ -342,7 +343,6 @@ nav ul li a.active {
     transition: all 0.3s;
 }
 
-/* Animate hamburger to X when open */
 .hamburger.open span:nth-child(1) {
     transform: translateY(7px) rotate(45deg);
 }
@@ -355,9 +355,8 @@ nav ul li a.active {
     transform: translateY(-7px) rotate(-45deg);
 }
 
-/* Mobile styles */
+/* Mobile */
 @media (max-width: 768px) {
-
     .hamburger {
         display: flex;
     }
@@ -395,4 +394,16 @@ nav ul li a.active {
     .contact-cards {
         flex-direction: column;
     }
+}
+
+/* Scroll reveal */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
 }

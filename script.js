@@ -1,32 +1,44 @@
-// ================================================
-// SMOOTH SCROLLING
-// ================================================
-// Get all navigation links that start with '#'
+// ================================
+// DECLARATIONS - all at top
+// ================================
 const navLinks = document.querySelectorAll('a[href^="#"]');
+const sections = document.querySelectorAll('.section');
+const revealElements = document.querySelectorAll('.reveal');
+const hamburger = document.querySelector('#hamburger');
+const navMenu = document.querySelector('#nav-links');
 
-// Loop through each link and add a click event listener
+// ================================
+// SMOOTH SCROLLING
+// ================================
 navLinks.forEach(link => {
-  link.addEventListener('click', function(e) {
-    // Prevent the default anchor click behavior
-    e.preventDefault(); // Stop the instant jump
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        const targetSection = document.querySelector(targetId);
 
-    const targetId = this.getAttribute('href'); // Get the target ID from the href attribute get "#about", "#services", etc.
-    const targetSection = document.querySelector(targetId); // Find the target section element
+        if (targetSection) {
+            // Reveal all sections first before scrolling
+            revealElements.forEach(el => el.classList.add('visible'));
+            
+            // Close hamburger menu if open
+            hamburger.classList.remove('open');
+            navMenu.classList.remove('open');
 
-    targetSection.scrollIntoView({ 
-        behavior: 'smooth', // Glide smoothly
-        Block: 'start' // Align the top of the section with the top of the viewport
-     }); // Scroll to the target section smoothly
-
+            // Then scroll
+            setTimeout(() => {
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 50);
+        }
     });
-
 });
 
 // ================================
 // ACTIVE NAV HIGHLIGHT ON SCROLL
 // ================================
-const sections = document.querySelectorAll('.section');
-
 window.addEventListener('scroll', () => {
     let current = '';
 
@@ -50,7 +62,6 @@ window.addEventListener('scroll', () => {
 // ================================
 const typingElement = document.querySelector('#typing-text');
 
-// You can add multiple titles - it will cycle through them
 const titles = [
     'SAP BTP & RAP Full Stack Developer',
     'S/4HANA & Clean Core Specialist',
@@ -58,61 +69,63 @@ const titles = [
     'SAP AI Integration Explorer'
 ];
 
-let titleIndex = 0;    // which title we're on
-let charIndex = 0;     // which character we're on
-let isDeleting = false; // are we typing or deleting
+let titleIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
 
 function type() {
     const currentTitle = titles[titleIndex];
 
     if (isDeleting) {
-        // Remove one character
         typingElement.textContent = currentTitle.substring(0, charIndex - 1);
         charIndex--;
     } else {
-        // Add one character
         typingElement.textContent = currentTitle.substring(0, charIndex + 1);
         charIndex++;
     }
 
-    // Finished typing the full title
     if (!isDeleting && charIndex === currentTitle.length) {
         isDeleting = true;
-        setTimeout(type, 2000); // Pause 2 seconds before deleting
+        setTimeout(type, 2000);
         return;
     }
 
-    // Finished deleting
     if (isDeleting && charIndex === 0) {
         isDeleting = false;
-        titleIndex = (titleIndex + 1) % titles.length; // Move to next title
-        setTimeout(type, 500); // Pause before typing next
+        titleIndex = (titleIndex + 1) % titles.length;
+        setTimeout(type, 500);
         return;
     }
 
-    // Speed — typing is slower than deleting
     const speed = isDeleting ? 40 : 80;
     setTimeout(type, speed);
 }
 
-// Start the typing animation when page loads
 type();
 
 // ================================
-// HAMBURGER MENU TOGGLE
+// HAMBURGER MENU
 // ================================
-const hamburger = document.querySelector('#hamburger');
-const navMenu = document.querySelector('#nav-links');
-
 hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('open');
     navMenu.classList.toggle('open');
 });
 
-// Close menu when a nav link is clicked
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        hamburger.classList.remove('open');
-        navMenu.classList.remove('open');
-    }); 
+// ================================
+// SCROLL REVEAL
+// ================================
+// Reveal all sections immediately on load
+window.addEventListener('load', () => {
+    revealElements.forEach(el => el.classList.add('visible'));
 });
+
+// Also observe for animation effect
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.05 });
+
+revealElements.forEach(el => observer.observe(el));
