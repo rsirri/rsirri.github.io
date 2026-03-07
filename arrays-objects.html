@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Arrays and Objects</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 40px;
+                background-color: #0a0a0a;
+                color: #e0e0e0;
+            }
+            .card {
+                background: #111;
+                border: 1ps solid #333;
+                border-left: 4px solid #2E75B6;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 12px 0;
+                transition: all 0.3s;
+            } 
+            .card h3 { color: #ffffff; margin-bottom: 8px; }
+            .card p  { color: #aaaaaa; font-size: 0.9rem; margin: 4px 0; }
+            .card span {
+                display: inline-block;
+                margin-top: 10px;
+                padding: 4px 12px;
+                background: #1a1a1a;
+                border: 1px solid #2E75B6;
+                border-radius: 12px;
+                color: #2E75B6;
+                font-size: 0.8rem;
+            }
+            button {
+                padding: 10px 20px;
+                margin: 8px;
+                background: #2E75B6;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.95rem;
+            }
+            button:hover { background: #1a5a9a; }
+            #output { margin-top: 20px; }
+            h2 {
+                color: #2E75B6;
+                margin: 30px 0 10px;
+                border-bottom: 2px solid #222;
+                padding-bottom: 8px;
+            }  
+        </style>
+    </head>
+    <body>
+
+        <h1>Arrays & Objects Practice</h1>
+
+        <h2>1 — Reading an Object</h2>
+        <button onclick="readObject()">Read Object</button>
+        <div id="object-output"></div>
+
+        <h2>2 — Reading an Array</h2>
+        <button onclick="readArray()">Read Array</button>
+        <div id="array-output"></div>
+
+        <h2>3 — Filter Array (like WHERE clause)</h2>
+        <button onclick="filterArray()">Show Senior Only</button>
+        <div id="filter-output"></div>
+
+        <h2>4 — Map Array (like LOOP AT with transform)</h2>
+        <button onclick="mapArray()">Add Seniority Label</button>
+        <div id="map-output"></div>
+
+        <h2>5 — Find in Array (like READ TABLE)</h2>
+        <button onclick="findInArray()">Find Rajesh</button>
+        <div id="find-output"></div>
+
+        <script>
+            // ================================
+            // OUR DATA - Array of Objects
+            // Like an internal table of structures
+            // ================================
+            const developers = [
+                { name: 'Rajesh',  role: 'SAP Developer',   years: 14, level: 'senior' },
+                { name: 'John',    role: 'Fiori Developer',  years: 4,  level: 'junior' },
+                { name: 'Priya',   role: 'BTP Architect',    years: 10, level: 'senior' },
+                { name: 'Kumar',   role: 'ABAP Consultant',  years: 2,  level: 'junior' },
+                { name: 'Sarah',   role: 'CAP Developer',    years: 7,  level: 'senior' }
+            ];
+
+            // Helper function to display cards
+            // We'll use this in every example below
+            function displayCards(data, containerId) {
+                const container = document.querySelector('#' + containerId);
+                container.innerHTML = ''; // Clear previous output
+
+                data.forEach(dev => {
+                    container.innerHTML += `
+                        <div class="card">
+                            <h3>${dev.name}</h3>
+                            <p>Role: ${dev.role}</p>
+                            <p>Experience: ${dev.years} years</p>
+                            <span>${dev.level}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // ================================
+            // 1 — Reading a single Object
+            // Like reading fields of a structure
+            // ================================
+            function readObject() {
+                const developer = developers[0]; // First item = index 0
+
+                document.querySelector('#object-output').innerHTML = `
+                    <div class="card">
+                        <h3>${developer.name}</h3>
+                        <p>Role: ${developer.role}</p>
+                        <p>Experience: ${developer.years} years</p>
+                        <span>${developer.level}</span>
+                    </div>
+                `;
+            }
+
+            // ================================
+            // 2 — Reading entire Array
+            // Like LOOP AT lt_developers INTO ls_developer
+            // ================================
+            function readArray() {
+                displayCards(developers, 'array-output');
+            }
+
+            // ================================
+            // 3 — Filter Array
+            // Like: SELECT * WHERE level = 'senior'
+            // or:   LOOP AT lt WHERE level = 'senior'
+            // ================================
+            function filterArray() {
+                const seniors = developers.filter(dev => dev.level === 'senior');
+                displayCards(seniors, 'filter-output');
+            }
+
+            // ================================
+            // 4 — Map Array
+            // Like LOOP AT and transforming each row
+            // ================================
+            function mapArray() {
+                const withLabel = developers.map(dev => {
+                    return {
+                        ...dev, // copy all existing fields
+                        role: dev.role + ' ⭐' // add something to role
+                    };
+                });
+                displayCards(withLabel, 'map-output');
+            }
+
+            // ================================
+            // 5 — Find in Array
+            // Like READ TABLE WITH KEY name = 'Rajesh'
+            // ================================
+            function findInArray() {
+                const found = developers.find(dev => dev.name === 'Rajesh');
+
+                document.querySelector('#find-output').innerHTML = `
+                    <div class="card">
+                        <h3>Found: ${found.name}</h3>
+                        <p>Role: ${found.role}</p>
+                        <p>Experience: ${found.years} years</p>
+                        <span>${found.level}</span>
+                    </div>
+                `;
+            }
+
+        </script>
+
+    </body>
+</html>
