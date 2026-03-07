@@ -1,4 +1,61 @@
 // ================================
+// CERTIFICATIONS DATA
+// Array of Objects to hold certification details
+// ================================
+const certData = [
+                    {
+                        icon: '🏆',
+                        title: 'SAP Certified Associate',
+                        subtitle: 'Back-End Developer - ABAP Cloud',
+                        category: 'certifications',
+                        tag: 'Certification'
+                    },
+                    {
+                        icon: '✅',
+                        title: 'Managing Clean Core',
+                        subtitle: 'SAP S/4HANA Cloud — Record of Achievement',
+                        category: 'achievements',
+                        tag: 'Achievement'
+                    },
+                    {
+                        icon: '✅',
+                        title: 'ABAP Environment on SAP BTP',
+                        subtitle: 'Setting Up — Record of Achievement',
+                        category: 'achievements',
+                        tag: 'Achievement'
+                    },
+                    {
+                        icon: '✅',
+                        title: 'ABAP Programming on SAP BTP',
+                        subtitle: 'Learning the Basics — Record of Achievement',
+                        category: 'achievements',
+                        tag: 'Achievement'
+                    },
+                    {
+                        icon: '✅',
+                        title: 'Data Migration to SAP S/4HANA',
+                        subtitle: 'Record of Achievement',
+                        category: 'achievements',
+                        tag: 'Achievement'
+                    },
+                    {
+                        icon: '📚',
+                        title: 'SAP Fiori Application Developer',
+                        subtitle: 'Certification — In Progress',
+                        category: 'learning',
+                        tag: 'Learning'
+                    },
+                    {
+                        icon: '📚',
+                        title: 'SAP BTP Application Developer',
+                        subtitle: 'Certification — Planned',
+                        category: 'learning',
+                        tag: 'Learning'
+                    }
+
+    ];
+
+// ================================
 // EXPERIENCE DATA
 // Array of Objects to hold experience details
 // ================================
@@ -462,3 +519,26 @@ function buildExperience() {
 
 // call the function when page loads
 buildExperience();
+
+// ================================
+// BUILD CERTIFICATIONS SECTION
+// Reads data array and creaes HTML dynamically
+// ================================
+function buildCertifications() {
+    const grid = document.querySelector('#cert-grid');
+    grid.innerHTML = '';
+
+    certData.forEach(cert => {
+        grid.innerHTML += `
+            <div class="cert-card" data-category="${cert.category}">
+                <div class="cert-icon">${cert.icon}</div>
+                <h3 class="cert-title">${cert.title}</h3>
+                <p class="cert-sub">${cert.subtitle}</p>
+                <span class="cert-tag">${cert.tag}</span>
+            </div>
+        `;
+    });
+}
+
+// call the function when page loads
+buildCertifications();  
