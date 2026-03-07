@@ -129,3 +129,34 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.05 });
 
 revealElements.forEach(el => observer.observe(el));
+
+// ================================
+// CERTIFICATIONS FILTER
+// ================================
+function filterCards(category, clickedBtn) {
+    
+    // Step 1: Get all cards and filter buttons
+    const allCards = document.querySelectorAll('.cert-card');
+    const allButtons = document.querySelectorAll('.filter-btn');
+
+    // Step 2: Remove active class from all buttons and add to the clicked one
+    allButtons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Step 3: Add active class to the clicked button
+    clickedBtn.classList.add('active');
+
+    // Step 4: Loop through every card and decide show or hide
+    allCards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+
+        if (category === 'all' ) { 
+            card.classList.remove('hidden');
+        } else if (cardCategory === category) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+    });
+}   
