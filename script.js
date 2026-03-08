@@ -474,12 +474,14 @@ function buildExperience() {
 
     // loop through each employer 
     experienceData.forEach(employer => {
+        const { company, title, period, clients } = employer;
 
         // Build client engagements HTML first
         let clientsHTML = '';
 
         // Loop through each client engagement for the employer
-        employer.clients.forEach(client => {
+        //employer.clients.forEach(client => {
+        clients.forEach(client => {
             
             // Build bullet points HTML for the client
             let pointsHTML = '';
@@ -506,10 +508,10 @@ function buildExperience() {
                 <div class="employer">
                     <div class="employer-header">
                         <div>
-                            <h3 class="employer-name">${employer.company}</h3>
-                            <span class="employer-title">${employer.title}</span>
+                            <h3 class="employer-name">${company}</h3>
+                            <span class="employer-title">${title}</span>
                         </div>
-                        <span class="employer-date">${employer.period}</span>
+                        <span class="employer-date">${period}</span>
                     </div>
                     ${clientsHTML}
                 </div>
@@ -529,12 +531,13 @@ function buildCertifications() {
     grid.innerHTML = '';
 
     certData.forEach(cert => {
+        const { icon, title, subtitle, category, tag } = cert;
         grid.innerHTML += `
-            <div class="cert-card" data-category="${cert.category}">
-                <div class="cert-icon">${cert.icon}</div>
-                <h3 class="cert-title">${cert.title}</h3>
-                <p class="cert-sub">${cert.subtitle}</p>
-                <span class="cert-tag">${cert.tag}</span>
+            <div class="cert-card" data-category="${category}">
+                <div class="cert-icon">${icon}</div>
+                <h3 class="cert-title">${title}</h3>
+                <p class="cert-sub">${subtitle}</p>
+                <span class="cert-tag">${tag}</span>
             </div>
         `;
     });

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ES6 Practice</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 40px;
+                background-color: #0a0a0a;
+                color: #e0e0e0;
+            }
+            .box {
+                background: #111;
+                border: 1px solid #333;
+                border-left: 4px solid #2E75B6;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 12px 0;
+            }
+            .box h3 { color: #ffffff; margin-bottom: 10px; }
+            .box p  { color: #aaaaaa; font-size: 0.95rem; margin: 4px 0; }
+            .box code {
+                        background: #1a1a1a;
+                        padding: 2px 8px;
+                        border-radius: 4px;
+                        color: #2E75B6;
+                        font-size: 0.9rem;
+                    }
+            button {
+                        padding: 10px 20px;
+                        margin: 8px 4px;
+                        background: #2E75B6;
+                        color: white;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-size: 0.9rem;
+                }
+            button:hover { background: #1a5a9a; }
+            h2 {
+                color: #ffffff;
+                margin: 40px 0 10px;
+                padding-bottom: 8px;
+                border-bottom: 2px solid #222;
+            }
+            #output {
+                background: #111;
+                border: 1px solid #333;
+                border-radius: 8px;
+                padding: 20px;
+                margin-top: 12px;
+                min-height: 60px;
+                color: #aaaaaa;
+            }            
+        </style>
+    </head>
+    <body> 
+        <h1>ES6 Modern JavaScript</h1>
+
+        <!-- 11. let and const -->
+         <h2>1 - let and const</h2>
+         <button onclick="showLetConst()">Run</button>
+         <div id="output-1" class="box"></div>
+
+        <!-- 2. Arrow Functions -->
+         <h2>2 - Arrow Functions</h2>
+         <button onClick="showArrowFunctions()">Run</button>
+         <div id="output-2" class="box"></div>
+
+        <!-- 3. Template Literals -->
+        <h2>3 - Template Literals</h2>
+        <button onClick="showTemplateLiterals()">Run</button>
+        <div id="output-3" class="box"></div>   
+
+        <!-- Destructuring -->
+         <h2>4 - Destructuring</h2>
+         <button onClick="showDestructuring()">Run</button>
+         <div id="output-4" class="box"></div>
+
+        <!-- Spread Operator -->
+         <h2>5 - Spread Operator</h2>   
+         <button onClick="showSpread()">Run</button> 
+         <div id="output-5" class="box"></div>
+
+         <!-- Default Parameters -->
+         <h2>6 - Default Parameters</h2>
+         <button onClick="showDefaultParams()">Run</button>
+         <div id="output-6" class="box"></div>
+
+        <!-- Optional Chaining -->
+         <h2>7 - Optional Chaining</h2>
+         <button onClick="showOptionalChaining()">Run</button>
+         <div id="output-7" class="box"></div>
+
+        <script>
+
+            // ================================
+            // 1 - let and const
+            // ================================
+            function showLetConst() {
+                // const - value never changes (like a constant in ABAP)
+                const name = 'Rajesh';
+                // name = 'John'; // This would cause an error!
+
+                // let - value can change (like a variable in ABAP)
+                let score = 10;
+                score = 20; // This is fine!
+
+                // var - old way, has function scope and can be re-declared (not recommended)
+                // var has confusing scope rules, so we avoid it in modern JS
+                // always use const by default, and let if you need to reassign
+
+                document.querySelector('#output-1').innerHTML = `
+                    <h3>let and const</h3>
+                    <p><code>const name = 'Rajesh';</code> - name is a constant and cannot be changed.</p>
+                    <p><code>let score = 10 → 20;</code> - score is a variable and can be updated/reassigned.</p>
+                    <p>Rule: use <code>const</code> by default, and <code>let</code> if you need to reassign.</p>
+                    <p>Never use <code>var</code> in modern JavaScript!</p>
+                `;
+            }
+
+            // ================================
+            // 2 - Arrow Functions
+            // ================================
+            function showArrowFunctions() {
+                
+                // Old way - regular function
+                function addOld(a, b) {
+                    return a + b;
+                }
+
+                // New way(ES6) - arrow function
+                const addNew = (a, b) => a + b;
+
+                // Arrow Function with one parameter - no brackets needed
+                const double = n => n * 2;
+
+                // Arrow Function with multiple lines - needs curly braces and return statement
+                const describe = (name, years) => {
+                    const level = years > 10 ? 'senior' : 'junior';
+                    return `${name} is a ${level} developer with ${years} years of experience.`;
+                }
+
+                document.querySelector('#output-2').innerHTML = `
+                    <h3>Arrow Functions</h3>
+                    <p>Old: <code>function add(a,b) { return a+b }</code></p>
+                    <p>New: <code>const add = (a,b) => a+b</code></p>
+                    <p>addOld(5, 3) = ${addOld(5, 3)}</p>
+                    <p>addNew(5, 3) = ${addNew(5, 3)}</p>
+                    <p>double(7) = ${double(7)}</p>
+                    <p>describe('Rajesh', 14) = ${describe('Rajesh', 14)}</p>
+                `;
+
+            }
+
+            // ================================
+            // 3 - Template Literals
+            // ================================
+            function showTemplateLiterals() {
+                const name = 'Rajesh';
+                const role = 'SAP Developer';
+                const years = 14;
+
+                // Old way - string concatenation
+                const oldWay = 'Hello ' + name + ', you are a ' + role + ' with ' + years + ' years of experience.';
+
+                // New way(ES6 way) - template literals
+                const newWay = `Hello ${name}, you are a ${role} with ${years} years of experience.`;
+
+                // Can also do expressions inside ${}
+                const withExpression = `Experience level: ${years > 10 ? 'Senior' : 'Junior'}`;
+
+                document.querySelector('#output-3').innerHTML = `
+                    <h3>Template Literals</h3>
+                    <p>Old: <code>'Hello ' + name + ', you are a ' + role</code></p>
+                    <p>New: <code>\`Hello \${name}, you are a \${role}\`</code></p>
+                    <p>${oldWay}</p>
+                    <p>${newWay}</p>
+                    <p>${withExpression}</p>
+                `;
+            }
+
+            // ================================
+            // 4 - Destructuring
+            // ================================
+            function showDestructuring() {
+
+                const developer = {
+                    name: 'Rajesh',
+                    role: 'SAP Developer',
+                    years: 14,
+                    location: 'Alpharetta, GA'
+                };
+
+                // Old way - access properties one by one
+                const nameOld = developer.name;
+                const roleOld = developer.role;
+                const yearsOld = developer.years;
+                const locationOld = developer.location;
+
+                // New way(ES6) - destructuring - extract multiple fields in one line
+                const { name, role, years, location } = developer;
+
+                // Array destructuring - can also do this with arrays
+                const colors = ['red', 'green', 'blue'];
+                const [first, second, third] = colors;
+
+                // Destructuring is great for pulling out specific fields from objects or arrays without having to access them one by one
+                // Destructuring with renaming - you can also rename variables while destructuring
+                const { name: devName, role: devRole } = developer;
+
+                document.querySelector('#output-4').innerHTML = `
+                    <h3>Destructuring</h3>
+                    <p>Old: <code>const name = developer.name; const role = developer.role;</code></p>
+                    <p>New: <code>const { name, role } = developer;</code></p>
+                    <p>Extracted: ${name}, ${role}, ${years} years, ${location}</p>
+                    <p>Array destructuring: first=${first}, second=${second}</p>
+                    <p>With rename: devName=${devName}, devRole=${devRole}</p>
+                `;
+
+            }
+
+            // ================================
+            // 5 - Spread Operator
+            // ================================
+            function showSpread() {
+
+                const dev1 = { name: 'Rajesh', role: 'SAP Developer' };
+
+                // Copy object
+                const dev2 = { ...dev1 }; // creates a new object with the same properties as dev1
+
+                // Copy and Override
+                const dev3 = { ...dev1, role: 'BTP Architect', years: 14 }; // creates a new object with all properties of dev1 but overrides role and adds years
+
+                // Merger two objects
+                const extra = { location: 'Alpharetta, GA', level: 'Senior' };
+                const merged = { ...dev1, ...extra }; // combines properties of dev1 and extra into a new object
+
+                // Spread with arrays
+                const arr1 = [1, 2, 3];
+                const arr2 = [4, 5, 6];
+                const combined = [...arr1, ...arr2]; // combines two arrays into one
+
+                document.querySelector('#output-5').innerHTML = `
+                        <h3>Spread Operator</h3>
+                        <p>Original: ${JSON.stringify(dev1)}</p>
+                        <p>Copied: ${JSON.stringify(dev2)}</p>
+                        <p>Copy + override: ${JSON.stringify(dev3)}</p>
+                        <p>Merged: ${JSON.stringify(merged)}</p>
+                        <p>Arrays combined: ${combined}</p>
+                    `;
+
+            }
+
+            // ================================
+            // 6 - Default Parameters
+            // ================================
+            function showDefaultParams() {
+
+                //  Without default - if not passed, value is undefined
+                function greetOld(name, role) {
+                    return `Hello ${name}, ${role}`;
+                }
+
+                // With default parameters - if not passed, uses default value fallback
+                function greetNew(name = 'Developer', role = 'SAP Consultant') {
+                    return `Hello ${name}, ${role}`;
+                }
+
+                document.querySelector('#output-6').innerHTML = `
+                    <h3>Default Parameters</h3>
+                    <p>Without defaults, missing params = undefined:</p>
+                    <p><code>greetOld('Rajesh')</code> → ${greetOld('Rajesh')}</p>
+                    <p>With defaults, missing params use fallback:</p>
+                    <p><code>greetNew('Rajesh')</code> → ${greetNew('Rajesh')}</p>
+                    <p><code>greetNew()</code> → ${greetNew()}</p>
+                    <p><code>greetNew('Rajesh', 'SAP Developer')</code> → ${greetNew('Rajesh', 'SAP Developer')}</p>
+                `;
+
+            }
+
+            // ================================
+            // 7 - Optional Chaining
+            // ================================
+            function showOptionalChaining() {
+
+                const dev1 = {
+                    name: 'Rajesh',
+                    address: {
+                        city: 'Alpharetta',
+                        state: 'GA'
+                    }
+                };
+                
+                // dev2 has no address
+                const dev2 = {
+                    name: 'John'
+                };
+
+                // Old way - had to check every level
+                const cityOld = dev2.address ? dev2.address.city : 'Unknown';
+
+                // ES6 Optional chaining - safe access with ?.
+                // Returns undefined instead of throwing error
+                const city1 = dev1.address?.city || 'Unknown';
+                const city2 = dev2.address?.city || 'Unknown';
+
+                // with nullish coalescing operator (??) - can provide fallback for null/undefined
+                const city2WithFallback = dev2.address?.city ?? 'Unknown';
+
+                document.querySelector('#output-7').innerHTML = `
+                    <h3>Optional Chaining ?. and Nullish Coalescing ??</h3>
+                    <p>dev1.address?.city = ${city1}</p>
+                    <p>dev2.address?.city = ${city2}</p>
+                    <p>Without ?. on dev2 would throw: Cannot read property 'city' of undefined</p>
+                    <p>With ?? fallback: ${city2WithFallback}</p>
+                    <p>Think of ?. like ABAP's IS NOT INITIAL check — safe access</p>
+                `;
+
+            }
+        </script>
+
+    </body>
+</html>
