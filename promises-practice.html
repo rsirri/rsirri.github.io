@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Promises Practice</title>
+        <style>
+            body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            }
+            h2 {
+                color: #2E75B6;
+                margin: 40px 0 10px;
+                padding-bottom: 8px;
+                border-bottom: 2px solid #222;
+            }
+            .box {
+                background: #111;
+                border: 1px solid #333;
+                border-left: 4px solid #2E75B6;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 12px 0;
+            }
+            .box p { color: #aaaaaa; margin: 6px 0; font-size: 0.95rem; }
+            .box code {
+                background: #1a1a1a;
+                padding: 2px 8px;
+                border-radius: 4px;
+                color: #2E75B6;
+            }
+            button {
+                padding: 10px 20px;
+                margin: 8px 4px;
+                background: #2E75B6;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                transition: all 0.3s;
+            }
+            button:hover { background: #1a5a9a; }
+            .status {
+                padding: 12px 16px;
+                border-radius: 6px;
+                margin: 10px 0;
+                font-size: 0.9rem;
+            }
+            .pending  { background: #1a1a00; border: 1px solid #666600; color: #cccc00; }
+            .resolved { background: #001a00; border: 1px solid #006600; color: #00cc00; }
+            .rejected { background: #1a0000; border: 1px solid #660000; color: #cc0000; }
+        </style>
+    </head>
+    <body>
+
+        <h2>Promises & Async/Await</h2>
+
+        <!-- 1. Basic Promise -->
+        <h2>1 - Basic Promise</h2>
+        <div class="box">
+            <p>A promise represnts a value that will arrive in the future.</p>
+            <button onclick="runBasicPromise()">Run Promise</button>
+            <button onclick="runFailedPromise()">Run Failed Promise</button>
+            <div id="promise-output"></div>
+        </div>
+
+        <!-- 2. Promise Chaining -->
+        <h2>2 - Promise Chaining</h2>
+        <div class="box">
+            <p>Chaining multiple operation, that promises allows you to perform a series of asynchronous operations in sequence.</p>
+            <button onclick="runPromiseChain()">Run Chain</button>
+            <div id="chain-output"></div>
+        </div>
+
+        <!-- 3. Async/Await -->
+        <h2>3 - Async / Await</h2>
+        <div class="box">
+            <p>Cleaner way to write Promises - reads like synchronous code.</p>
+            <button onclick="runAsyncAwait()">Run Async/Await</button>
+            <div id="async-output"></div>
+        </div>
+
+        <!-- 4. Real world simulation -->
+        <h2>4 - Real World Simulation(API Call)</h2>
+        <div class="box">
+            <p>Simulating fetching SAP data — with loading state.</p>
+            <button onclick="fetchSAPData()">Fetch SAP Data</button>
+            <div id="sap-output"></div>
+        </div>
+
+        <script>
+
+            // ================================
+            // HELPER FUNCTIONS - simulate delay
+            // Like waiting for RFC response
+            // ================================
+            function wait(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            // ================================
+            // 1. Basic Promise
+            // ================================
+            function runBasicPromise() {
+                const output = document.querySelector('#promise-output');
+
+                output.innerHTML = '<div class="status pending">⏳ Pending — Promise is running...</div>';
+
+                // Create a promise
+                const myPromise = new Promise((resolve, reject) => {
+                    //Simulate async work - like waiting for RFC
+                    setTimeout(() => {
+                        resolve('Data received successfully');
+                    }, 2000);
+                });
+
+                // Handle the result
+                myPromise.then(result => {
+                    output.innerHTML = `<div class="status resolved">✅ Resolved — ${result}</div>`;
+                }).catch(error => {
+                    output.innerHTML = `<div class="status rejected">❌ Rejected — ${error}</div>`;
+                })
+
+            }
+
+            function runFailedPromise() {
+                const output = document.querySelector('#promise-output');
+
+                output.innerHTML = '<div class="status pending">⏳ Pending — Promise is running...</div>';
+
+                // Create a promise that fails
+                const myPromise = new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        reject('RFC connection failed!');
+                    }, 2000);
+                });
+
+                // Handle the result
+                myPromise
+                    .then(result => {
+                        output.innerHTML = `<div class="status resolved">✅ Resolved — ${result}</div>`;
+                    })
+                    .catch(error => {
+                        output.innerHTML = `<div class="status rejected">❌ Rejected — ${error}</div>`;
+                    });
+            }
+
+            // ================================
+            // 2. Promise Chaining
+            // Each .then receives result of previous step
+            // Like chained RFC calls or processing steps
+            // ================================
+            async function runPromiseChain() {
+                const output = document.querySelector('#chain-output');
+
+                output.innerHTML = '';
+
+                // Step 1
+                output.innerHTML += '<div class="status pending">⏳ Step 1: Fetching employee...</div>';
+                await wait(1000);
+                output.innerHTML += '<div class="status resolved">✅ Step 1: Employee found: Rajesh</div>';
+
+                // Step 2
+                output.innerHTML += '<div class="status pending">⏳ Step 2: Fetching assignmetns...</div>';
+                await wait(1000);
+                output.innerHTML += '<div class="status resolved">✅ Step 2: Assignments found: Kiewit</div>';
+
+                // Step 3
+                output.innerHTML += '<div class="status pending">⏳ Step 3: Fetching certifications...</div>';
+                await wait(1000);
+                output.innerHTML += '<div class="status resolved">✅ Step 3: certifications loaded: 5 found</div>';
+
+                output.innerHTML += '<div class="status resolved">🎉 All data loaded successfully!</div>';
+
+            }
+
+            // ================================
+            // 3. Async / Await
+            // Same as Promise but cleaner syntax
+            // Reads like synchronous code, but non-blocking
+            // ================================
+            async function runAsyncAwait() {
+                const output = document.querySelector('#async-output');
+
+                try {
+                    output.innerHTML = '<div class="status pending">⏳ Starting async operation...</div>';
+
+                    // await pauses HERE only - rest of page is still interactive
+                    await wait(1500);
+
+                    output.innerHTML = '<div class="status resolved">✅ Async operation completed!</div>';
+                    output.innerHTML += `
+                        <div class="box" style="margin-top: 20px;">
+                            <p><code>async></code> - marks function as asynchronous</p>
+                            <p><code>await</code> - waits for promise to resolve before moving on</p>
+                            <p><code>try/catch</code> - handle errors in async functions - equal to ABAP exception handling</p>
+                        </div>
+                    `;
+
+                } catch (error) {
+                    output.innerHTML = `<div class="status rejected">❌ Async operation failed — ${error}</div>`;
+                }
+            }
+
+            // ================================
+            // 4 - Real World Simulation
+            // Simulating fetching SAP data with loading state
+            // This is exactly how fetch API works
+            // ================================
+            async function fetchSAPData() {
+                const output = document.querySelector('#sap-output');
+
+                // Show loading state
+                output.innerHTML = '<div class="status pending">⏳ Calling SAP OData Service...</div>';
+
+                try {
+                    // Simulate network delay and response
+                    await wait(2000);
+
+                    // Simulate data coming back from SAP - in real life this would be a fetch() call to an API endpoint
+                    const sapData = [
+                        { id: '1001', material: 'Pump Assembly',    plant: '1000', stock: 150 },
+                        { id: '1002', material: 'Control Valve',    plant: '1000', stock: 75  },
+                        { id: '1003', material: 'Pressure Sensor',  plant: '2000', stock: 200 },
+                    ];
+
+                    // Build result HTML
+                    let html = '<div class="status resolved">✅ Data received from SAP!</div>';
+                    html += '<div style="margin-top:12px">';
+
+                    sapData.forEach(item => {
+                        html += `
+                            <div style="padding:10px; margin:6px 0; background:#1a1a1a;
+                                        border-radius:6px; border-left:3px solid #2E75B6;">
+                                <strong style="color:#fff">${item.material}</strong>
+                                <span style="color:#aaa; margin-left:12px">
+                                    Plant: ${item.plant} | Stock: ${item.stock}
+                                </span>
+                            </div>
+                        `;
+                    });
+
+                    html += '</div>';
+                    output.innerHTML = html;
+
+                } catch(error) {
+                    output.innerHTML = `<div class="status rejected">❌ OData call failed: ${error}</div>`;
+                }
+            }
+
+        </script>
+
+    </body>
+</html>
