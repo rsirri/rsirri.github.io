@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Events Practice</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 40px;
+                background: #0a0a0a;
+                color: #e0e0e0;
+            }
+            h2 {
+                color: #2E75B6;
+                margin: 40px 0 10px;
+                padding-bottom: 8px;
+                border-bottom: 2px solid #222;
+            }
+            .box {
+                background: #111;
+                border: 1px solid #333;
+                border-left: 4px solid #2E75B6;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 12px 0;
+            }
+            .box p { color: #aaaaaa; margin: 6px 0; font-size: 0.95rem; }
+            .box code {
+                background: #1a1a1a;
+                padding: 2px 8px;
+                border-radius: 4px;
+                color: #2E75B6;
+            }
+            button {
+                padding: 10px 20px;
+                margin: 8px 4px;
+                background: #2E75B6;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                transition: all 0.3s;
+            }
+            button:hover { background: #1a5a9a; }
+            input, textarea {
+                width: 100%;
+                padding: 10px;
+                background: #1a1a1a;
+                border: 1px solid #333;
+                border-radius: 4px;
+                color: #e0e0e0;
+                font-size: 0.95rem;
+                margin: 8px 0;
+                box-sizing: border-box;
+            }
+            input:focus, textarea:focus {
+                outline: none;
+                border-color: #2E75B6;
+            }
+            .highlight {
+                border-color: #2E75B6 !important;
+                background: #0d1a2a !important;
+            }
+            #hover-box {
+                width: 200px;
+                height: 100px;
+                background: #1a1a1a;
+                border: 2px solid #333;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s;
+                cursor: pointer;
+                margin: 12px 0;
+            }
+            #event-log {
+                background: #0a0a0a;
+                border: 1px solid #333;
+                border-radius: 8px;
+                padding: 16px;
+                height: 150px;
+                overflow-y: auto;
+                font-size: 0.85rem;
+                color: #aaaaaa;
+                margin-top: 12px;
+            }
+            .log-entry {
+                padding: 4px 0;
+                border-bottom: 1px solid #1a1a1a;
+            }
+            .log-entry span {
+                color: #2E75B6;
+                margin-right: 8px;
+            }
+        </style>
+    </head>
+    <body> 
+
+        <h1>JavaScript Events Practice - Deep Dive</h1>
+
+        <!-- 1. Click Event -->
+         <h2>1 - Click Event</h2>
+        <div class="box">
+            <p>Most common event. Fires when an element is clicked.</p>
+            <button id="click-btn">Click Me</button>
+            <button id="click-btn-2">Click Me Too</button>
+            <p id="click-output">Waiting for click...></p>
+        </div>"
+
+        <!-- 2. Input / Keyup Event -->
+        <h2>2 - Input / Keyup Event</h2>
+        <div class="box">
+            <p>Input event fires when the value of an input element is changed.</p>
+            <input type="text" id="name-input" placeholder="Type something...">
+            <p id="input-output">Waiting for input...</p>
+        </div>
+
+        <!-- 3. Focus and Blur -->
+         <h2>3 - Focus and Blur Events</h2>
+         <div class="box">
+            <p><code>focus</code> fires when input is clicked into. <code>blur</code> fires when you click away.</p>
+            <input type="text" id="focus-input" placeholder="Click in and out of me..." />
+            <p id="focus-output">Waiting...</p>
+        </div>
+
+        <!-- 4. Mouseover and Mouseout -->
+        <h2>4 - Mouseover and Mouseout Events</h2>
+        <div class="box">
+            <p>Hover over the box below:</p>
+            <div id="hover-box">Hover over me</div>
+            <p id="hover-output">Waiting...</p>
+        </div>
+
+        <!-- 5. The Event Onject -->
+         <div class="box">
+            <p>Every event passes an <code>event object</code> — contains info about what happened.</p>
+            <button id="event-obj-btn">Click to see Event Object info</button>
+            <p id="event-obj-output">Waiting...</p>  
+         </div>
+
+         <!-- 6. Event Delegation -->
+        <h2>6 — Event Delegation</h2>
+        <div class="box">
+            <p>One listener on parent handles clicks on ALL children — even ones added later.</p>
+            <div id="btn-container">
+                <button class="dynamic-btn">Button 1</button>
+                <button class="dynamic-btn">Button 2</button>
+                <button class="dynamic-btn">Button 3</button>
+            </div>
+            <button id="add-btn" style="margin-top:12px; background:#27AE60">Add New Button</button>
+            <p id="delegation-output">Click any button...</p>
+        </div>
+
+        <!-- 7. Event Log -->
+        <h2>7 — Live Event Log</h2>
+        <div class="box">
+            <p>All events happening on this page logged in real time:</p>
+            <div id="event-log">
+                <div class="log-entry"><span>Ready</span>Event log started...</div>
+            </div>
+        </div>
+
+        
+        <script>
+
+            // ===================================
+            // EVENT LOG HELPER FUNCTION
+            // Logs every event to section 7
+            // ===================================
+            function logEvent(type, detail) {
+                const log = document.querySelector('#event-log');
+                const time = new Date().toLocaleTimeString();
+                log.innerHTML = `<div class="log-entry"><span>${time} [${type}]</span>${detail}</div>` + log.innerHTML;
+            }
+
+            // ===================================
+            // 1. CLICK EVENTS
+            // ===================================
+            const clickBtn = document.querySelector('#click-btn');
+            const clickBtn2 = document.querySelector('#click-btn-2');
+            const clickOutput = document.querySelector('#click-output');
+
+            let clickCount = 0;
+
+            clickBtn.addEventListener('click', function() {
+                clickCount++;
+                clickOutput.textContent = `Button 1 clicked ${clickCount} times!`;
+                logEvent('click', `Button 1 clicked — count: ${clickCount}`);
+            });
+
+            document.querySelector('#click-btn-2').addEventListener('click', function() {
+                clickOutput.textContent = `Button 2 was clicked!`;
+                logEvent('click', 'Button 2 was clicked');
+            });
+
+            // ===================================
+            // 2. INPUT / KEYUP EVENTS
+            // ===================================
+            document.querySelector('#name-input').addEventListener('input', function(e) {
+                const value = e.target.value;
+                document.querySelector('#input-output').textContent =
+                value.length > 0 ? `You typed: "${value}" — ${value.length} characters` : 'Waiting for input...';
+                logEvent('input', `Value: "${value}"`);
+            });
+
+            // ===================================
+            // 3. FOCUS AND BLUR
+            // ===================================
+            const focusInput = document.querySelector('#focus-input');
+
+            focusInput.addEventListener('focus', function() {
+                focusInput.classList.add('highlight');
+                document.querySelector('#focus-output').textContent = 'Input is focused — user is inside';
+                logEvent('focus', 'Input focused');
+            }); 
+
+            focusInput.addEventListener('blur', function() {
+                focusInput.classList.remove('highlight');
+                document.querySelector('#focus-output').textContent = `Input lost focus — value was: "${focusInput.value}"`;
+                logEvent('blur', `Input blurred — value: "${focusInput.value}"`);
+            });
+
+            // ===================================
+            // 4. MOUSEOVER AND MOUSEOUT
+            // ===================================
+            const hoverBox = document.querySelector('#hover-box');
+
+            hoverBox.addEventListener('mouseenter', function() {
+                hoverBox.style.background = '#2E75B6';
+                hoverBox.style.borderColor = '#2E75B6';
+                hoverBox.textContent = 'Mouse is inside!';
+                document.querySelector('#hover-output').textContent = 'mouseenter fired';
+                logEvent('mouseenter', 'Mouse entered the box');
+            });
+
+            hoverBox.addEventListener('mouseleave', function() {
+                hoverBox.style.background = '#1a1a1a';
+                hoverBox.style.borderColor = '#333';
+                hoverBox.textContent = 'Hover over me';
+                document.querySelector('#hover-output').textContent = 'mouseleave fired';
+                logEvent('mouseleave', 'Mouse left the box');
+            });
+
+            // ===================================
+            // 5. THE EVENT OBJECT
+            // Every handler receives this automatically with details about the event
+            // ===================================
+            document.querySelector('#event-obj-btn').addEventListener('click', function(e) {
+                document.querySelector('#event-obj-output').innerHTML = `
+                    <code>e.type</code> = ${e.type} |
+                    <code>e.target.tagName</code> = ${e.target.tagName} |
+                    <code>e.target.textContent</code> = "${e.target.textContent}" |
+                    <code>e.timeStamp</code> = ${Math.round(e.timeStamp)}ms since page load
+                `;
+                logEvent('event object', `type=${e.type}, target=${e.target.tagName}`);
+            });
+
+            // ===================================
+            // 6. EVENT DELEGATION
+            // One listener handles All buttons
+            // ===================================
+            const btnContainer = document.querySelector('#btn-container');
+            let btnCount = 3;
+
+            // ONE listener on the PARENT
+            btnContainer.addEventListener('click', function(e) {
+                // e.target is the actual element clicked
+                if (e.target.classList.contains('dynamic-btn')) {
+                    document.querySelector('#delegation-output').textContent =
+                        `You clicked: "${e.target.textContent}"`;
+                    logEvent('delegation', `Clicked: ${e.target.textContent}`);
+                }
+            });
+
+            // Add new button dynamically
+            document.querySelector('#add-btn').addEventListener('click', function() {
+                btnCount++;
+                const newBtn = document.createElement('button');
+                newBtn.className = 'dynamic-btn';
+                newBtn.textContent = `Button ${btnCount}`;
+                newBtn.style.margin = '4px';
+                btnContainer.appendChild(newBtn);
+                logEvent('DOM', `Added Button ${btnCount} dynamically`);
+            });
+
+            // ===================================
+            // WINDOW load Event
+            // Browser driven - fires when page fully loaded
+            // ===================================
+            logEvent('window', 'Page fully loaded and ready');
+            
+            document.querySelector('body').addEventListener('click', function(e) {
+                console.log('Body caught a click from:', e.target.tagName, e.target.textContent);
+            });
+
+            
+        </script>
+
+    </body>
+</html>
