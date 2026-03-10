@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Reference — Rajesh Sirri</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:        #080b10;
+            --surface:   #0d1117;
+            --surface2:  #161b22;
+            --border:    #21262d;
+            --accent:    #2E75B6;
+            --accent2:   #58a6ff;
+            --green:     #3fb950;
+            --orange:    #d29922;
+            --red:       #f85149;
+            --purple:    #bc8cff;
+            --text:      #e6edf3;
+            --muted:     #8b949e;
+            --code-bg:   #161b22;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── GRID BACKGROUND ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(46,117,182,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(46,117,182,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── LAYOUT ── */
+        .wrapper {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 32px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        .sidebar-header {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .sidebar-logo {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent2);
+            margin-bottom: 6px;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        .sidebar-sub {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-section {
+            padding: 8px 24px 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 24px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            border-left: 2px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: var(--surface2);
+            border-left-color: var(--accent);
+        }
+
+        .nav-link.active {
+            color: var(--accent2);
+            border-left-color: var(--accent2);
+            background: rgba(88,166,255,0.06);
+        }
+
+        .nav-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 16px 24px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .sidebar-footer p {
+            font-size: 0.7rem;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main {
+            padding: 48px 56px;
+            max-width: 900px;
+        }
+
+        /* ── PAGE HEADER ── */
+        .page-header {
+            margin-bottom: 56px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .page-eyebrow {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .page-desc {
+            font-size: 1rem;
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 580px;
+        }
+
+        .page-desc strong { color: var(--accent2); font-weight: 600; }
+
+        .badge-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .badge-blue   { background: rgba(46,117,182,0.15); color: var(--accent2); border: 1px solid rgba(46,117,182,0.3); }
+        .badge-green  { background: rgba(63,185,80,0.15);  color: var(--green);   border: 1px solid rgba(63,185,80,0.3); }
+        .badge-purple { background: rgba(188,140,255,0.15);color: var(--purple);  border: 1px solid rgba(188,140,255,0.3); }
+        .badge-orange { background: rgba(210,153,34,0.15); color: var(--orange);  border: 1px solid rgba(210,153,34,0.3); }
+
+        /* ── SECTIONS ── */
+        .section {
+            margin-bottom: 64px;
+            scroll-margin-top: 32px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(46,117,182,0.1);
+            border: 1px solid rgba(46,117,182,0.2);
+            padding: 4px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── CONCEPT CARDS ── */
+        .concept {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .concept:hover { border-color: var(--accent); }
+
+        .concept-header {
+            padding: 16px 20px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .concept-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+
+        .concept-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tag-es6     { background: rgba(63,185,80,0.1);   color: var(--green);  border: 1px solid rgba(63,185,80,0.2); }
+        .tag-dom     { background: rgba(46,117,182,0.1);  color: var(--accent2);border: 1px solid rgba(46,117,182,0.2); }
+        .tag-array   { background: rgba(188,140,255,0.1); color: var(--purple); border: 1px solid rgba(188,140,255,0.2); }
+        .tag-event   { background: rgba(210,153,34,0.1);  color: var(--orange); border: 1px solid rgba(210,153,34,0.2); }
+        .tag-async   { background: rgba(248,81,73,0.1);   color: var(--red);    border: 1px solid rgba(248,81,73,0.2); }
+
+        .concept-body { padding: 20px; }
+
+        .concept-desc {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .concept-desc strong { color: var(--text); font-weight: 600; }
+
+        /* ── CODE BLOCKS ── */
+        .code-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .code-block.full { grid-column: 1 / -1; }
+
+        .code-label {
+            padding: 6px 14px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .label-abap { background: rgba(210,153,34,0.1); color: var(--orange); }
+        .label-js   { background: rgba(46,117,182,0.1); color: var(--accent2); }
+        .label-note { background: rgba(63,185,80,0.1);  color: var(--green); }
+        .label-bad  { background: rgba(248,81,73,0.1);  color: var(--red); }
+        .label-good { background: rgba(63,185,80,0.1);  color: var(--green); }
+
+        pre {
+            padding: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            overflow-x: auto;
+            color: var(--text);
+        }
+
+        pre::-webkit-scrollbar { height: 4px; }
+        pre::-webkit-scrollbar-track { background: transparent; }
+        pre::-webkit-scrollbar-thumb { background: var(--border); }
+
+        /* syntax colors */
+        .k  { color: #ff7b72; }  /* keywords */
+        .f  { color: #d2a8ff; }  /* functions */
+        .s  { color: #a5d6ff; }  /* strings */
+        .c  { color: #8b949e; font-style: italic; }  /* comments */
+        .n  { color: #79c0ff; }  /* numbers */
+        .v  { color: #ffa657; }  /* variables */
+        .p  { color: var(--text); }  /* punctuation */
+        .g  { color: var(--green); }  /* green highlight */
+        .o  { color: var(--orange); } /* orange highlight */
+
+        /* ── SAP CALLOUT ── */
+        .sap-callout {
+            display: flex;
+            gap: 12px;
+            padding: 14px 16px;
+            background: rgba(210,153,34,0.06);
+            border: 1px solid rgba(210,153,34,0.2);
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .sap-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .sap-text {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .sap-text strong { color: var(--orange); }
+
+        /* ── QUICK REF TABLE ── */
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 8px;
+        }
+
+        .ref-table th {
+            text-align: left;
+            padding: 10px 14px;
+            background: var(--surface2);
+            color: var(--muted);
+            font-size: 0.65rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ref-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        .ref-table tr:last-child td { border-bottom: none; }
+        .ref-table tr:hover td { background: var(--surface2); }
+
+        .ref-table .method { color: var(--accent2); }
+        .ref-table .desc   { color: var(--muted); }
+        .ref-table .abap   { color: var(--orange); }
+
+        /* ── HIGHLIGHT BOX ── */
+        .highlight-box {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .highlight-rule {
+            background: rgba(88,166,255,0.06);
+            border: 1px solid rgba(88,166,255,0.15);
+            color: var(--muted);
+        }
+
+        .highlight-rule strong { color: var(--accent2); }
+
+        /* ── SEARCH ── */
+        .search-wrap {
+            padding: 0 24px 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input::placeholder { color: var(--muted); }
+        .search-input:focus { border-color: var(--accent); }
+
+        /* ── PROGRESS BAR ── */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+
+        /* ── BACK TO TOP ── */
+        .back-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .back-top.visible { opacity: 1; transform: translateY(0); }
+        .back-top:hover { background: var(--accent2); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .wrapper { grid-template-columns: 1fr; }
+            .sidebar { position: relative; height: auto; }
+            .main { padding: 32px 24px; }
+            .code-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="wrapper">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">JS Reference</div>
+            <div class="sidebar-title">JavaScript Cheat Sheet</div>
+            <div class="sidebar-sub">// Rajesh Sirri · 2025</div>
+        </div>
+
+        <div class="search-wrap">
+            <input class="search-input" type="text" placeholder="Search concepts..." id="searchInput" oninput="searchConcepts(this.value)" />
+        </div>
+
+        <div class="nav-section">Fundamentals</div>
+        <a href="#es6" class="nav-link"><span class="nav-dot" style="color:var(--green)"></span>ES6 Modern Features</a>
+        <a href="#dom" class="nav-link"><span class="nav-dot" style="color:var(--accent2)"></span>DOM Manipulation</a>
+
+        <div class="nav-section">Data</div>
+        <a href="#arrays" class="nav-link"><span class="nav-dot" style="color:var(--purple)"></span>Arrays & Objects</a>
+        <a href="#array-methods" class="nav-link"><span class="nav-dot" style="color:var(--purple)"></span>Array Methods</a>
+
+        <div class="nav-section">Interaction</div>
+        <a href="#events" class="nav-link"><span class="nav-dot" style="color:var(--orange)"></span>Events</a>
+        <a href="#async" class="nav-link"><span class="nav-dot" style="color:var(--red)"></span>Promises & Async</a>
+
+        <div class="nav-section">Quick Reference</div>
+        <a href="#quickref" class="nav-link"><span class="nav-dot"></span>All Methods</a>
+        <a href="#patterns" class="nav-link"><span class="nav-dot"></span>Common Patterns</a>
+
+        <div class="sidebar-footer">
+            <p>Built session by session 🚀</p>
+            <p style="margin-top:4px;color:var(--accent2)">rsirri.github.io</p>
+        </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+        <!-- PAGE HEADER -->
+        <header class="page-header">
+            <div class="page-eyebrow">// Personal Reference</div>
+            <h1 class="page-title">JavaScript<br>Cheat Sheet</h1>
+            <p class="page-desc">
+                Every concept learned — with <strong>ABAP parallels</strong> so it always clicks.
+                Built session by session, concept by concept.
+            </p>
+            <div class="badge-row">
+                <span class="badge badge-green">ES6+</span>
+                <span class="badge badge-blue">DOM</span>
+                <span class="badge badge-purple">Arrays</span>
+                <span class="badge badge-orange">Events</span>
+                <span class="badge badge-blue">Async/Await</span>
+            </div>
+        </header>
+
+        <!-- ════════════════════════════════ -->
+        <!-- SECTION 1 — ES6                  -->
+        <!-- ════════════════════════════════ -->
+        <section class="section" id="es6">
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h2 class="section-title">ES6 Modern Features</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <!-- const / let -->
+            <div class="concept" data-search="const let var variable declaration">
+                <div class="concept-header">
+                    <span class="concept-name">const / let / var</span>
+                    <span class="concept-tag tag-es6">ES6</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">
+                        <strong>const</strong> — value never changes. Use by default.<br>
+                        <strong>let</strong> — value can change. Use only when needed.<br>
+                        <strong>var</strong> — old way. Never use in modern JS.
+                    </p>
+                    <div class="code-grid">
+                        <div class="code-block">
+                            <div class="code-label label-js">JavaScript</div>
+                            <pre><span class="k">const</span> <span class="v">name</span> = <span class="s">'Rajesh'</span>;   <span class="c">// cannot reassign</span>
+<span class="k">let</span> <span class="v">score</span> = <span class="n">10</span>;         <span class="c">// can reassign</span>
+<span class="v">score</span> = <span class="n">20</span>;             <span class="c">// ✅ fine</span>
+<span class="c">// name = 'John'        // ❌ error</span></pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-label label-abap">ABAP Parallel</div>
+                            <pre><span class="c">" const = CONSTANTS</span>
+<span class="k">CONSTANTS</span> <span class="v">lc_name</span> <span class="k">TYPE</span> string
+  <span class="k">VALUE</span> <span class="s">'Rajesh'</span>.
+
+<span class="c">" let = DATA</span>
+<span class="k">DATA</span> <span class="v">lv_score</span> <span class="k">TYPE</span> i <span class="k">VALUE</span> <span class="n">10</span>.
+<span class="v">lv_score</span> = <span class="n">20</span>.</pre>
+                        </div>
+                    </div>
+                    <div class="highlight-box highlight-rule">
+                        <strong>Rule:</strong> Always start with <strong>const</strong>. Only switch to <strong>let</strong> if you need to reassign. Never use <strong>var</strong>.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow Functions -->
+            <div class="concept" data-search="arrow function fat arrow es6">
+                <div class="concept-header">
+                    <span class="concept-name">Arrow Functions  =>;</span>
+                    <span class="concept-tag tag-es6">ES6</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">Shorter syntax for functions. No <code style="color:var(--accent2)">function</code> keyword needed.</p>
+                    <div class="code-grid">
+                        <div class="code-block">
+                            <div class="code-label label-bad">Old Way</div>
+                            <pre><span class="k">function</span> <span class="f">add</span>(<span class="v">a</span>, <span class="v">b</span>) {
+  <span class="k">return</span> <span class="v">a</span> + <span class="v">b</span>;
+}</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-label label-good">Arrow Function</div>
+                            <pre><span class="k">const</span> <span class="f">add</span> = (<span class="v">a</span>, <span class="v">b</span>) => <span class="v">a</span> + <span class="v">b</span>;
+
+<span class="c">// one param — no brackets</span>
+<span class="k">const</span> <span class="f">double</span> = <span class="v">n</span> => <span class="v">n</span> * <span class="n">2</span>;</pre>
+                        </div>
+                        <div class="code-block full">
+                            <div class="code-label label-js">Multi-line Arrow Function</div>
+                            <pre><span class="k">const</span> <span class="f">describe</span> = (<span class="v">name</span>, <span class="v">years</span>) => {
+  <span class="k">const</span> <span class="v">level</span> = <span class="v">years</span> > <span class="n">10</span> ? <span class="s">'Senior'</span> : <span class="s">'Junior'</span>;
+  <span class="k">return</span> <span class="s">`<span class="v">${name}</span> is a <span class="v">${level}</span> developer`</span>;
+};</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Template Literals -->
+            <div class="concept" data-search="template literal string interpolation backtick">
+                <div class="concept-header">
+                    <span class="concept-name">Template Literals  `${}`</span>
+                    <span class="concept-tag tag-es6">ES6</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">String interpolation using backticks. Replaces messy string concatenation.</p>
+                    <div class="code-grid">
+                        <div class="code-block">
+                            <div class="code-label label-bad">Old Way (concatenation)</div>
+                            <pre><span class="k">const</span> <span class="v">msg</span> = <span class="s">'Hello '</span> + <span class="v">name</span> +
+  <span class="s">', you have '</span> + <span class="v">years</span> + <span class="s">' years'</span>;</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-label label-good">Template Literal</div>
+                            <pre><span class="k">const</span> <span class="v">msg</span> = <span class="s">`Hello <span class="v">${name}</span>,
+  you have <span class="v">${years}</span> years`</span>;</pre>
+                        </div>
+                    </div>
+                    <div class="sap-callout">
+                        <span class="sap-icon">🔷</span>
+                        <div class="sap-text"><strong>ABAP:</strong> Like <strong>|Hello { lv_name }|</strong> string template syntax in modern ABAP.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Destructuring -->
+            <div class="concept" data-search="destructuring extract object array">
+                <div class="concept-header">
+                    <span class="concept-name">Destructuring  { }</span>
+                    <span class="concept-tag tag-es6">ES6</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">Extract multiple values from objects or arrays in one clean line.</p>
+                    <div class="code-grid">
+                        <div class="code-block">
+                            <div class="code-label label-bad">Old Way</div>
+                            <pre><span class="k">const</span> <span class="v">name</span>  = <span class="v">dev</span>.name;
+<span class="k">const</span> <span class="v">role</span>  = <span class="v">dev</span>.role;
+<span class="k">const</span> <span class="v">years</span> = <span class="v">dev</span>.years;</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-label label-good">Destructuring</div>
+                            <pre><span class="k">const</span> { <span class="v">name</span>, <span class="v">role</span>, <span class="v">years</span> } = <span class="v">dev</span>;
+
+<span class="c">// with rename</span>
+<span class="k">const</span> { <span class="v">name</span>: <span class="v">devName</span> } = <span class="v">dev</span>;</pre>
+                        </div>
+                        <div class="code-block full">
+                            <div class="code-label label-js">Array Destructuring</div>
+                            <pre><span class="k">const</span> [<span class="v">first</span>, <span class="v">second</span>, <span class="v">third</span>] = [<span class="s">'blue'</span>, <span class="s">'red'</span>, <span class="s">'green'</span>];
+<span class="c">// first = 'blue', second = 'red', third = 'green'</span></pre>
+                        </div>
+                    </div>
+                    <div class="sap-callout">
+                        <span class="sap-icon">🔷</span>
+                        <div class="sap-text"><strong>ABAP:</strong> Like copying structure fields — <strong>lv_name = ls_dev-name.</strong> but all in one line.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spread -->
+            <div class="concept" data-search="spread operator copy merge object array">
+                <div class="concept-header">
+                    <span class="concept-name">Spread Operator  ...</span>
+                    <span class="concept-tag tag-es6">ES6</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">Copy all properties of an object or elements of an array. Copy and override in one step.</p>
+                    <div class="code-grid">
+                        <div class="code-block">
+                            <div class="code-label label-js">Object Spread</div>
+                            <pre><span class="k">const</span> <span class="v">copy</span>    = { ...<span class="v">dev</span> };
+<span class="k">const</span> <span class="v">updated</span> = { ...<span class="v">dev</span>, <span class="v">role</span>: <span class="s">'Architect'</span> };
+<span class="k">const</span> <span class="v">merged</span>  = { ...<span class="v">dev</span>, ...<span class="v">extra</span> };</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-label label-js">Array Spread</div>
+                            <pre><span class="k">const</span> <span class="v">a</span> = [<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>];
+<span class="k">const</span> <span class="v">b</span> = [<span class="n">4</span>, <span class="n">5</span>, <span class="n">6</span>];
+<span class="k">const</span> <span class="v">all</span> = [...<span class="v">a</span>, ...<span class="v">b</span>];</pre>
+                        </div>
+                    </div>
+                    <div class="sap-callout">
+                        <span class="sap-icon">🔷</span>
+                        <div class="sap-text"><strong>ABAP:</strong> Like <strong>ls_new = ls_old.</strong> then overriding specific fields after copy.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optional Chaining -->
+            <div class="concept" data-search="optional chaining nullish coalescing safe access undefined">
+                <div class="concept-header">
+                    <span class="concept-name">Optional Chaining  ?.  and  ??</span>
+                    <span class="concept-tag tag-es6">ES6</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">
+                        <strong>?.</strong> — safe property access. Returns undefined instead of crashing.<br>
+                        <strong>??</strong> — nullish coalescing. Provide fallback if value is null/undefined.
+                    </p>
+                    <div class="code-grid">
+                        <div class="code-block">
+                            <div class="code-label label-bad">Without — crashes if missing</div>
+                            <pre><span class="c">// if dev.address is undefined → ERROR</span>
+<span class="k">const</span> <span class="v">city</span> = <span class="v">dev</span>.address.city;</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-label label-good">With ?. — safe</div>
+                            <pre><span class="c">// returns undefined if address missing</span>
+<span class="k">const</span> <span class="v">city</span> = <span class="v">dev</span>?.<span class="v">address</span>?.<span class="v">city</span>;
+
+<span class="c">// with fallback using ??</span>
+<span class="k">const</span> <span class="v">city</span> = <span class="v">dev</span>?.<span class="v">address</span>?.<span class="v">city</span> ?? <span class="s">'Unknown'</span>;</pre>
+                        </div>
+                    </div>
+                    <div class="sap-callout">
+                        <span class="sap-icon">🔷</span>
+                        <div class="sap-text"><strong>ABAP:</strong> Like checking <strong>IS NOT INITIAL</strong> before accessing nested fields. Prevents dump equivalent.</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ════════════════════════════════ -->
+        <!-- SECTION 2 — DOM                  -->
+        <!-- ════════════════════════════════ -->
+        <section class="section" id="dom">
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <h2 class="section-title">DOM Manipulation</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="concept" data-search="querySelector getElementById DOM find element">
+                <div class="concept-header">
+                    <span class="concept-name">Finding Elements</span>
+                    <span class="concept-tag tag-dom">DOM</span>
+                </div>
+                <div class="concept-body">
+                    <div class="code-block full">
+                        <div class="code-label label-js">JavaScript</div>
+                        <pre><span class="c">// Single element — returns first match</span>
+<span class="k">const</span> <span class="v">btn</span>  = <span class="v">document</span>.<span class="f">querySelector</span>(<span class="s">'#myBtn'</span>);     <span class="c">// by id</span>
+<span class="k">const</span> <span class="v">box</span>  = <span class="v">document</span>.<span class="f">querySelector</span>(<span class="s">'.myBox'</span>);    <span class="c">// by class</span>
+<span class="k">const</span> <span class="v">h1</span>   = <span class="v">document</span>.<span class="f">querySelector</span>(<span class="s">'h1'</span>);         <span class="c">// by tag</span>
+
+<span class="c">// Multiple elements — returns NodeList (loop with forEach)</span>
+<span class="k">const</span> <span class="v">btns</span> = <span class="v">document</span>.<span class="f">querySelectorAll</span>(<span class="s">'.btn'</span>);
+<span class="v">btns</span>.<span class="f">forEach</span>(<span class="v">btn</span> => <span class="v">btn</span>.<span class="f">addEventListener</span>(<span class="s">'click'</span>, <span class="f">handler</span>));</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept" data-search="textContent innerHTML style classList DOM change modify">
+                <div class="concept-header">
+                    <span class="concept-name">Reading & Changing Elements</span>
+                    <span class="concept-tag tag-dom">DOM</span>
+                </div>
+                <div class="concept-body">
+                    <div class="code-block full">
+                        <div class="code-label label-js">JavaScript</div>
+                        <pre><span class="k">const</span> <span class="v">el</span> = <span class="v">document</span>.<span class="f">querySelector</span>(<span class="s">'#myEl'</span>);
+
+<span class="c">// Text content (safe — no HTML parsing)</span>
+<span class="v">el</span>.textContent = <span class="s">'New text'</span>;
+
+<span class="c">// HTML content (parses HTML tags)</span>
+<span class="v">el</span>.innerHTML = <span class="s">`&lt;strong&gt;Bold text&lt;/strong&gt;`</span>;
+
+<span class="c">// Inline styles</span>
+<span class="v">el</span>.style.backgroundColor = <span class="s">'#2E75B6'</span>;
+<span class="v">el</span>.style.display = <span class="s">'none'</span>;
+
+<span class="c">// CSS classes</span>
+<span class="v">el</span>.classList.<span class="f">add</span>(<span class="s">'active'</span>);
+<span class="v">el</span>.classList.<span class="f">remove</span>(<span class="s">'active'</span>);
+<span class="v">el</span>.classList.<span class="f">toggle</span>(<span class="s">'active'</span>);    <span class="c">// adds if missing, removes if present</span>
+<span class="v">el</span>.classList.<span class="f">contains</span>(<span class="s">'active'</span>); <span class="c">// true/false</span>
+
+<span class="c">// Data attributes</span>
+<span class="v">el</span>.<span class="f">getAttribute</span>(<span class="s">'data-category'</span>); <span class="c">// read</span>
+<span class="v">el</span>.<span class="f">setAttribute</span>(<span class="s">'data-category'</span>, <span class="s">'new'</span>); <span class="c">// write</span></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept" data-search="createElement appendChild remove DOM create add delete">
+                <div class="concept-header">
+                    <span class="concept-name">Creating & Removing Elements</span>
+                    <span class="concept-tag tag-dom">DOM</span>
+                </div>
+                <div class="concept-body">
+                    <div class="code-block full">
+                        <div class="code-label label-js">JavaScript</div>
+                        <pre><span class="c">// Create new element</span>
+<span class="k">const</span> <span class="v">div</span> = <span class="v">document</span>.<span class="f">createElement</span>(<span class="s">'div'</span>);
+<span class="v">div</span>.className = <span class="s">'card'</span>;
+<span class="v">div</span>.textContent = <span class="s">'New card'</span>;
+
+<span class="c">// Add to page</span>
+<span class="v">document</span>.body.<span class="f">appendChild</span>(<span class="v">div</span>);           <span class="c">// at end</span>
+<span class="v">container</span>.<span class="f">prepend</span>(<span class="v">div</span>);                   <span class="c">// at start</span>
+
+<span class="c">// Remove from page</span>
+<span class="v">div</span>.<span class="f">remove</span>();
+
+<span class="c">// Build HTML directly (faster for multiple elements)</span>
+<span class="v">container</span>.innerHTML += <span class="s">`&lt;div class="card"&gt;${data}&lt;/div&gt;`</span>;</pre>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ════════════════════════════════ -->
+        <!-- SECTION 3 — ARRAYS & OBJECTS     -->
+        <!-- ════════════════════════════════ -->
+        <section class="section" id="arrays">
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h2 class="section-title">Arrays & Objects</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="concept" data-search="array object structure internal table nested">
+                <div class="concept-header">
+                    <span class="concept-name">Arrays & Objects — The Mental Model</span>
+                    <span class="concept-tag tag-array">Data</span>
+                </div>
+                <div class="concept-body">
+                    <div class="code-grid">
+                        <div class="code-block">
+                            <div class="code-label label-abap">ABAP</div>
+                            <pre><span class="c">" Structure = one record</span>
+<span class="k">DATA</span>: <span class="k">BEGIN OF</span> <span class="v">ls_dev</span>,
+  <span class="v">name</span>  <span class="k">TYPE</span> string,
+  <span class="v">years</span> <span class="k">TYPE</span> i,
+<span class="k">END OF</span> <span class="v">ls_dev</span>.
+
+<span class="c">" Internal Table = multiple records</span>
+<span class="k">DATA</span> <span class="v">lt_devs</span> <span class="k">LIKE TABLE OF</span> <span class="v">ls_dev</span>.</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-label label-js">JavaScript</div>
+                            <pre><span class="c">// Object = one record (like structure)</span>
+<span class="k">const</span> <span class="v">dev</span> = {
+  <span class="v">name</span>:  <span class="s">'Rajesh'</span>,
+  <span class="v">years</span>: <span class="n">14</span>
+};
+
+<span class="c">// Array = multiple records (like int. table)</span>
+<span class="k">const</span> <span class="v">devs</span> = [
+  { <span class="v">name</span>: <span class="s">'Rajesh'</span>, <span class="v">years</span>: <span class="n">14</span> },
+  { <span class="v">name</span>: <span class="s">'John'</span>,   <span class="v">years</span>: <span class="n">5</span>  }
+];</pre>
+                        </div>
+                    </div>
+                    <div class="highlight-box highlight-rule">
+                        <strong>Index starts at 0</strong> — devs[0] = Rajesh, devs[1] = John. Unlike ABAP where table index starts at 1.
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ════════════════════════════════ -->
+        <!-- SECTION 4 — ARRAY METHODS        -->
+        <!-- ════════════════════════════════ -->
+        <section class="section" id="array-methods">
+            <div class="section-header">
+                <span class="section-number">04</span>
+                <h2 class="section-title">Array Methods</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="concept" data-search="forEach map filter find reduce loop array methods">
+                <div class="concept-header">
+                    <span class="concept-name">forEach / map / filter / find</span>
+                    <span class="concept-tag tag-array">Array</span>
+                </div>
+                <div class="concept-body">
+                    <div class="code-block full">
+                        <div class="code-label label-js">JavaScript — all 4 methods</div>
+                        <pre><span class="k">const</span> <span class="v">devs</span> = [
+  { <span class="v">name</span>: <span class="s">'Rajesh'</span>, <span class="v">years</span>: <span class="n">14</span>, <span class="v">level</span>: <span class="s">'senior'</span> },
+  { <span class="v">name</span>: <span class="s">'John'</span>,   <span class="v">years</span>: <span class="n">4</span>,  <span class="v">level</span>: <span class="s">'junior'</span> },
+  { <span class="v">name</span>: <span class="s">'Priya'</span>,  <span class="v">years</span>: <span class="n">10</span>, <span class="v">level</span>: <span class="s">'senior'</span> }
+];
+
+<span class="c">// forEach — loop through, no return (LOOP AT)</span>
+<span class="v">devs</span>.<span class="f">forEach</span>(<span class="v">dev</span> => <span class="v">console</span>.<span class="f">log</span>(<span class="v">dev</span>.name));
+
+<span class="c">// filter — return matching items (LOOP AT WHERE)</span>
+<span class="k">const</span> <span class="v">seniors</span> = <span class="v">devs</span>.<span class="f">filter</span>(<span class="v">dev</span> => <span class="v">dev</span>.level === <span class="s">'senior'</span>);
+
+<span class="c">// map — transform every item, return new array (LOOP AT + modify)</span>
+<span class="k">const</span> <span class="v">names</span> = <span class="v">devs</span>.<span class="f">map</span>(<span class="v">dev</span> => <span class="v">dev</span>.name);
+<span class="k">const</span> <span class="v">tagged</span> = <span class="v">devs</span>.<span class="f">map</span>(<span class="v">dev</span> => ({ ...<span class="v">dev</span>, <span class="v">name</span>: <span class="v">dev</span>.name + <span class="s">' ⭐'</span> }));
+
+<span class="c">// find — return first match (READ TABLE WITH KEY)</span>
+<span class="k">const</span> <span class="v">rajesh</span> = <span class="v">devs</span>.<span class="f">find</span>(<span class="v">dev</span> => <span class="v">dev</span>.name === <span class="s">'Rajesh'</span>);</pre>
+                    </div>
+                    <div class="sap-callout">
+                        <span class="sap-icon">🔷</span>
+                        <div class="sap-text">
+                            <strong>forEach</strong> = LOOP AT &nbsp;|&nbsp;
+                            <strong>filter</strong> = LOOP AT WHERE &nbsp;|&nbsp;
+                            <strong>find</strong> = READ TABLE WITH KEY &nbsp;|&nbsp;
+                            <strong>map</strong> = LOOP AT + transform
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ════════════════════════════════ -->
+        <!-- SECTION 5 — EVENTS               -->
+        <!-- ════════════════════════════════ -->
+        <section class="section" id="events">
+            <div class="section-header">
+                <span class="section-number">05</span>
+                <h2 class="section-title">Events</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="concept" data-search="addEventListener click event listener handler">
+                <div class="concept-header">
+                    <span class="concept-name">addEventListener — The 3 Parts</span>
+                    <span class="concept-tag tag-event">Event</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">Every event has three parts: <strong>Target</strong> (what to watch), <strong>Type</strong> (what action), <strong>Handler</strong> (what to run).</p>
+                    <div class="code-block full">
+                        <div class="code-label label-js">JavaScript</div>
+                        <pre><span class="c">//  target       type       handler</span>
+<span class="v">button</span>.<span class="f">addEventListener</span>(<span class="s">'click'</span>,    () => { <span class="c">/* ... */</span> });
+<span class="v">input</span>.<span class="f">addEventListener</span>(<span class="s">'input'</span>,    (<span class="v">e</span>) => <span class="f">handleInput</span>(<span class="v">e</span>));
+<span class="v">input</span>.<span class="f">addEventListener</span>(<span class="s">'focus'</span>,    () => <span class="v">input</span>.classList.<span class="f">add</span>(<span class="s">'active'</span>));
+<span class="v">input</span>.<span class="f">addEventListener</span>(<span class="s">'blur'</span>,     () => <span class="v">input</span>.classList.<span class="f">remove</span>(<span class="s">'active'</span>));
+<span class="v">box</span>.<span class="f">addEventListener</span>(<span class="s">'mouseenter'</span>, () => <span class="v">box</span>.style.background = <span class="s">'blue'</span>);
+<span class="v">box</span>.<span class="f">addEventListener</span>(<span class="s">'mouseleave'</span>, () => <span class="v">box</span>.style.background = <span class="s">''</span>);
+<span class="v">window</span>.<span class="f">addEventListener</span>(<span class="s">'scroll'</span>,   () => <span class="f">handleScroll</span>());
+<span class="v">window</span>.<span class="f">addEventListener</span>(<span class="s">'load'</span>,     () => <span class="f">init</span>());</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept" data-search="event object e.target bubbling delegation">
+                <div class="concept-header">
+                    <span class="concept-name">Event Object & Delegation</span>
+                    <span class="concept-tag tag-event">Event</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">
+                        <strong>e.target</strong> — the exact element that triggered the event.<br>
+                        <strong>Bubbling</strong> — events travel upward through all parents automatically.<br>
+                        <strong>Delegation</strong> — one listener on parent handles ALL children including dynamic ones.
+                    </p>
+                    <div class="code-grid">
+                        <div class="code-block">
+                            <div class="code-label label-bad">Without delegation — fragile</div>
+                            <pre><span class="c">// Must add listener to EACH button</span>
+<span class="c">// Dynamic buttons won't work</span>
+<span class="v">btn1</span>.<span class="f">addEventListener</span>(<span class="s">'click'</span>, <span class="f">handler</span>);
+<span class="v">btn2</span>.<span class="f">addEventListener</span>(<span class="s">'click'</span>, <span class="f">handler</span>);
+<span class="v">btn3</span>.<span class="f">addEventListener</span>(<span class="s">'click'</span>, <span class="f">handler</span>);</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-label label-good">With delegation — robust</div>
+                            <pre><span class="c">// ONE listener handles ALL buttons</span>
+<span class="c">// Works for dynamic buttons too</span>
+<span class="v">container</span>.<span class="f">addEventListener</span>(<span class="s">'click'</span>, (<span class="v">e</span>) => {
+  <span class="k">if</span> (<span class="v">e</span>.target.<span class="v">classList</span>.<span class="f">contains</span>(<span class="s">'btn'</span>)) {
+    <span class="f">handler</span>(<span class="v">e</span>.target);
+  }
+});</pre>
+                        </div>
+                    </div>
+                    <div class="sap-callout">
+                        <span class="sap-icon">🔷</span>
+                        <div class="sap-text"><strong>e.target</strong> is like <strong>SY-UCOMM</strong> in ABAP — tells you exactly which action/element was triggered.</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ════════════════════════════════ -->
+        <!-- SECTION 6 — ASYNC                -->
+        <!-- ════════════════════════════════ -->
+        <section class="section" id="async">
+            <div class="section-header">
+                <span class="section-number">06</span>
+                <h2 class="section-title">Promises & Async/Await</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="concept" data-search="promise resolve reject then catch async await asynchronous">
+                <div class="concept-header">
+                    <span class="concept-name">Promise — resolve / reject</span>
+                    <span class="concept-tag tag-async">Async</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">A Promise = a value that will arrive in the future. Three states: <strong>Pending</strong> → <strong>Resolved</strong> or <strong>Rejected</strong>.</p>
+                    <div class="code-block full">
+                        <div class="code-label label-js">JavaScript</div>
+                        <pre><span class="k">const</span> <span class="v">myPromise</span> = <span class="k">new</span> <span class="f">Promise</span>((<span class="v">resolve</span>, <span class="v">reject</span>) => {
+  <span class="c">// async work here...</span>
+  <span class="k">if</span> (success) {
+    <span class="f">resolve</span>(<span class="s">'Data received!'</span>);  <span class="c">// like successful RFC return</span>
+  } <span class="k">else</span> {
+    <span class="f">reject</span>(<span class="s">'Connection failed'</span>);  <span class="c">// like RFC exception</span>
+  }
+});
+
+<span class="v">myPromise</span>
+  .<span class="f">then</span>(<span class="v">result</span> => <span class="v">console</span>.<span class="f">log</span>(<span class="v">result</span>))  <span class="c">// success</span>
+  .<span class="f">catch</span>(<span class="v">error</span>  => <span class="v">console</span>.<span class="f">log</span>(<span class="v">error</span>));  <span class="c">// failure</span></pre>
+                    </div>
+                    <div class="sap-callout">
+                        <span class="sap-icon">🔷</span>
+                        <div class="sap-text">
+                            <strong>resolve</strong> = successful RFC/BAPI return &nbsp;|&nbsp;
+                            <strong>reject</strong> = RAISE EXCEPTION in RFC &nbsp;|&nbsp;
+                            <strong>.catch</strong> = CATCH cx_exception
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept" data-search="async await try catch asynchronous modern">
+                <div class="concept-header">
+                    <span class="concept-name">async / await — Cleaner Promises</span>
+                    <span class="concept-tag tag-async">Async</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">
+                        <strong>async</strong> — marks a function as asynchronous.<br>
+                        <strong>await</strong> — pauses THIS function only. Page stays alive. Continues when Promise resolves.
+                    </p>
+                    <div class="code-grid">
+                        <div class="code-block">
+                            <div class="code-label label-bad">Promise .then chain</div>
+                            <pre><span class="f">fetchData</span>()
+  .<span class="f">then</span>(<span class="v">data</span> => <span class="f">process</span>(<span class="v">data</span>))
+  .<span class="f">then</span>(<span class="v">result</span> => <span class="f">display</span>(<span class="v">result</span>))
+  .<span class="f">catch</span>(<span class="v">err</span> => <span class="f">handleError</span>(<span class="v">err</span>));</pre>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-label label-good">async/await — reads like ABAP</div>
+                            <pre><span class="k">async function</span> <span class="f">loadData</span>() {
+  <span class="k">try</span> {
+    <span class="k">const</span> <span class="v">data</span>   = <span class="k">await</span> <span class="f">fetchData</span>();
+    <span class="k">const</span> <span class="v">result</span> = <span class="k">await</span> <span class="f">process</span>(<span class="v">data</span>);
+    <span class="f">display</span>(<span class="v">result</span>);
+  } <span class="k">catch</span>(<span class="v">err</span>) {
+    <span class="f">handleError</span>(<span class="v">err</span>);
+  }
+}</pre>
+                        </div>
+                    </div>
+                    <div class="sap-callout">
+                        <span class="sap-icon">🔷</span>
+                        <div class="sap-text">
+                            <strong>try/catch</strong> = TRY / CATCH in ABAP OOP &nbsp;|&nbsp;
+                            <strong>await</strong> pauses only the current function, NOT the whole page — unlike synchronous ABAP RFC calls.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ════════════════════════════════ -->
+        <!-- SECTION 7 — QUICK REFERENCE      -->
+        <!-- ════════════════════════════════ -->
+        <section class="section" id="quickref">
+            <div class="section-header">
+                <span class="section-number">07</span>
+                <h2 class="section-title">Quick Reference</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="concept">
+                <div class="concept-header">
+                    <span class="concept-name">All Methods at a Glance</span>
+                    <span class="concept-tag tag-dom">Reference</span>
+                </div>
+                <div class="concept-body">
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Method / Syntax</th>
+                                <th>What it does</th>
+                                <th>ABAP Equivalent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="method">querySelector('#id')</td><td class="desc">Find element by id</td><td class="abap">READ TABLE ... WITH KEY</td></tr>
+                            <tr><td class="method">querySelectorAll('.cls')</td><td class="desc">Find all matching elements</td><td class="abap">LOOP AT lt WHERE...</td></tr>
+                            <tr><td class="method">el.textContent = '...'</td><td class="desc">Set text of element</td><td class="abap">lv_text = '...'</td></tr>
+                            <tr><td class="method">el.innerHTML = '...'</td><td class="desc">Set HTML of element</td><td class="abap">lv_html = '...'</td></tr>
+                            <tr><td class="method">el.classList.add('x')</td><td class="desc">Add CSS class</td><td class="abap">SET PF-STATUS</td></tr>
+                            <tr><td class="method">el.classList.toggle('x')</td><td class="desc">Add if missing, remove if present</td><td class="abap">IF x. CLEAR x. ELSE. x = 'X'. ENDIF.</td></tr>
+                            <tr><td class="method">el.getAttribute('data-x')</td><td class="desc">Read data attribute</td><td class="abap">ls_row-field</td></tr>
+                            <tr><td class="method">arr.forEach(x => ...)</td><td class="desc">Loop through array</td><td class="abap">LOOP AT lt INTO ls</td></tr>
+                            <tr><td class="method">arr.filter(x => cond)</td><td class="desc">Return items matching condition</td><td class="abap">LOOP AT lt WHERE field = val</td></tr>
+                            <tr><td class="method">arr.map(x => transform)</td><td class="desc">Transform every item, return new array</td><td class="abap">LOOP AT lt + MODIFY</td></tr>
+                            <tr><td class="method">arr.find(x => cond)</td><td class="desc">Return first matching item</td><td class="abap">READ TABLE WITH KEY</td></tr>
+                            <tr><td class="method">const {a,b} = obj</td><td class="desc">Extract fields from object</td><td class="abap">lv_a = ls-a. lv_b = ls-b.</td></tr>
+                            <tr><td class="method">{...obj, x: 'y'}</td><td class="desc">Copy object, override field</td><td class="abap">ls_new = ls_old. ls_new-x = 'y'.</td></tr>
+                            <tr><td class="method">obj?.prop?.sub</td><td class="desc">Safe nested access</td><td class="abap">CHECK ls IS NOT INITIAL.</td></tr>
+                            <tr><td class="method">val ?? 'fallback'</td><td class="desc">Use fallback if null/undefined</td><td class="abap">IF lv IS INITIAL. lv = 'default'. ENDIF.</td></tr>
+                            <tr><td class="method">await fetchData()</td><td class="desc">Wait for async operation</td><td class="abap">CALL FUNCTION (synchronous)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ════════════════════════════════ -->
+        <!-- SECTION 8 — PATTERNS             -->
+        <!-- ════════════════════════════════ -->
+        <section class="section" id="patterns">
+            <div class="section-header">
+                <span class="section-number">08</span>
+                <h2 class="section-title">Common Patterns</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="concept" data-search="data driven UI build HTML from array dynamic render">
+                <div class="concept-header">
+                    <span class="concept-name">Pattern — Data Driven UI</span>
+                    <span class="concept-tag tag-array">Pattern</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">Store data in arrays. Build HTML dynamically. Never hardcode UI content.</p>
+                    <div class="code-block full">
+                        <div class="code-label label-js">JavaScript — used in your portfolio</div>
+                        <pre><span class="k">const</span> <span class="v">data</span> = [
+  { <span class="v">name</span>: <span class="s">'Item 1'</span>, <span class="v">type</span>: <span class="s">'A'</span> },
+  { <span class="v">name</span>: <span class="s">'Item 2'</span>, <span class="v">type</span>: <span class="s">'B'</span> }
+];
+
+<span class="k">function</span> <span class="f">buildUI</span>() {
+  <span class="k">const</span> <span class="v">container</span> = <span class="v">document</span>.<span class="f">querySelector</span>(<span class="s">'#container'</span>);
+  <span class="v">container</span>.innerHTML = <span class="s">''</span>;
+
+  <span class="v">data</span>.<span class="f">forEach</span>(({ <span class="v">name</span>, <span class="v">type</span> }) => {   <span class="c">// destructure inline</span>
+    <span class="v">container</span>.innerHTML += <span class="s">`
+      &lt;div class="card" data-type="${<span class="v">type</span>}"&gt;
+        &lt;h3&gt;${<span class="v">name</span>}&lt;/h3&gt;
+      &lt;/div&gt;
+    `</span>;
+  });
+}
+
+<span class="f">buildUI</span>(); <span class="c">// call on page load</span></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept" data-search="filter pattern active class show hide toggle">
+                <div class="concept-header">
+                    <span class="concept-name">Pattern — Filter UI</span>
+                    <span class="concept-tag tag-event">Pattern</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">Filter buttons pattern — reset all, activate one, show/hide cards. Used in your certifications section.</p>
+                    <div class="code-block full">
+                        <div class="code-label label-js">JavaScript — your certifications filter</div>
+                        <pre><span class="k">function</span> <span class="f">filterCards</span>(<span class="v">category</span>, <span class="v">clickedBtn</span>) {
+  <span class="c">// 1. Reset all buttons</span>
+  <span class="v">document</span>.<span class="f">querySelectorAll</span>(<span class="s">'.filter-btn'</span>)
+    .<span class="f">forEach</span>(<span class="v">btn</span> => <span class="v">btn</span>.classList.<span class="f">remove</span>(<span class="s">'active'</span>));
+
+  <span class="c">// 2. Activate clicked button</span>
+  <span class="v">clickedBtn</span>.classList.<span class="f">add</span>(<span class="s">'active'</span>);
+
+  <span class="c">// 3. Show/hide cards</span>
+  <span class="v">document</span>.<span class="f">querySelectorAll</span>(<span class="s">'.card'</span>).<span class="f">forEach</span>(<span class="v">card</span> => {
+    <span class="k">const</span> { <span class="v">category</span>: <span class="v">cardCat</span> } = <span class="v">card</span>.dataset;
+    <span class="k">const</span> <span class="v">show</span> = <span class="v">category</span> === <span class="s">'all'</span> || <span class="v">cardCat</span> === <span class="v">category</span>;
+    <span class="v">card</span>.classList.<span class="f">toggle</span>(<span class="s">'hidden'</span>, !<span class="v">show</span>);
+  });
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept" data-search="fetch api odata async await real data">
+                <div class="concept-header">
+                    <span class="concept-name">Pattern — Fetch API (coming next)</span>
+                    <span class="concept-tag tag-async">Async</span>
+                </div>
+                <div class="concept-body">
+                    <p class="concept-desc">The standard pattern for calling any API — OData, REST, CAP service. You'll use this constantly.</p>
+                    <div class="code-block full">
+                        <div class="code-label label-js">JavaScript</div>
+                        <pre><span class="k">async function</span> <span class="f">fetchData</span>(<span class="v">url</span>) {
+  <span class="k">try</span> {
+    <span class="c">// 1. Show loading state</span>
+    <span class="v">container</span>.innerHTML = <span class="s">'⏳ Loading...'</span>;
+
+    <span class="c">// 2. Make the call</span>
+    <span class="k">const</span> <span class="v">response</span> = <span class="k">await</span> <span class="f">fetch</span>(<span class="v">url</span>);
+
+    <span class="c">// 3. Parse JSON</span>
+    <span class="k">const</span> <span class="v">data</span> = <span class="k">await</span> <span class="v">response</span>.<span class="f">json</span>();
+
+    <span class="c">// 4. Use the data</span>
+    <span class="f">buildUI</span>(<span class="v">data</span>);
+
+  } <span class="k">catch</span>(<span class="v">error</span>) {
+    <span class="c">// 5. Handle errors</span>
+    <span class="v">container</span>.innerHTML = <span class="s">`❌ Error: ${<span class="v">error</span>.message}`</span>;
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<script>
+    // ── PROGRESS BAR ──
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / docHeight) * 100;
+        document.querySelector('#progress').style.width = progress + '%';
+
+        // back to top
+        const backTop = document.querySelector('#backTop');
+        backTop.classList.toggle('visible', scrollTop > 400);
+    });
+
+    // ── ACTIVE NAV ──
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => link.classList.remove('active'));
+                const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+                if (active) active.classList.add('active');
+            }
+        });
+    }, { threshold: 0.3 });
+
+    sections.forEach(s => observer.observe(s));
+
+    // ── SEARCH ──
+    function searchConcepts(query) {
+        const concepts = document.querySelectorAll('.concept');
+        const q = query.toLowerCase();
+
+        concepts.forEach(concept => {
+            const searchText = (concept.dataset.search || '') + concept.textContent;
+            concept.style.display = searchText.toLowerCase().includes(q) ? 'block' : 'none';
+        });
+    }
+</script>
+
+</body>
+</html>
