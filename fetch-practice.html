@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fetch API Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #0a0a0a;
+            color: #e0e0e0;
+        }
+
+        h1 {
+            color: #2E75B6;
+            margin-bottom: 8px;
+        }
+
+        p.sub {
+            color: #888;
+            margin-bottom: 32px;
+            font-size: 0.9rem;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 16px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #2E75B6;
+        }
+
+        button {
+            padding: 12px 28px;
+            background: #2E75B6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #1a5a9a;
+        }
+
+        button:disabled {
+            background: #333;
+            cursor: not-allowed;
+        }
+
+        /* States */
+        .state {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .loading {
+            background: #1a1a00;
+            border: 1px solid #444400;
+            color: #cccc00;
+        }
+
+        .error {
+            background: #1a0000;
+            border: 1px solid #440000;
+            color: #cc4444;
+        }
+
+        /* Country Card */
+        .country-card {
+            background: #111;
+            border: 1px solid #222;
+            border-left: 4px solid #2E75B6;
+            border-radius: 10px;
+            padding: 28px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 28px;
+            align-items: start;
+            transition: border-color 0.3s;
+        }
+
+        .country-card:hover {
+            border-color: #2E75B6;
+        }
+
+        .country-flag {
+            font-size: 5rem;
+            line-height: 1;
+        }
+
+        .country-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .country-official {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {}
+
+        .info-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+
+        .borders-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .borders-label {
+            font-size: 0.75rem;
+            color: #555;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-right: 4px;
+        }
+
+        .border-tag {
+            padding: 4px 12px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            color: #2E75B6;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .border-tag:hover {
+            background: #2E75B6;
+            color: white;
+            border-color: #2E75B6;
+        }
+
+        /* History -->
+        .history {
+            margin-top: 40px;
+        }
+        .history h3 {
+            color: #555;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .history-tag {
+            padding: 6px 14px;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .history-tag:hover { color: #2E75B6; border-color: #2E75B6; }
+
+        /* Console */
+        .console-section {
+            margin-top: 40px;
+        }
+
+        .console-section h3 {
+            color: #555;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .console {
+            background: #050505;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .console-line {
+            padding: 3px 0;
+            border-bottom: 1px solid #0d0d0d;
+        }
+
+        .console-line .time {
+            color: #333;
+            margin-right: 8px;
+        }
+
+        .console-line .info {
+            color: #2E75B6;
+        }
+
+        .console-line .success {
+            color: #3fb950;
+        }
+
+        .console-line .error {
+            color: #f85149;
+        }
+
+        .console-line .data {
+            color: #d2a8ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🌍 Country Explorer</h1>
+    <p class="sub">Fetch API practice — live data from restcountries.com</p>
+
+    <!-- Search -->
+    <div class="search-row">
+        <input type="text" id="country-input" placeholder="Enter country name... (e.g. Germany, Japan, India)" />
+        <button id="search-btn" onclick="searchCountry()">Search</button>
+    </div>
+
+    <!-- Result -->
+    <div id="result"></div>
+
+    <!-- Search History -->
+    <div class="history">
+        <h3>Recent Searches</h3>
+        <div class="history-list" id="history-list"></div>
+    </div>
+
+    <!-- Console Log -->
+    <div class="console-section">
+        <h3>API Console — what's happening under the hood</h3>
+        <div class="console" id="console"></div>
+    </div>
+
+    <script>
+
+        // ================================
+        // SEARCH HISTORY
+        // ================================
+        const searchHistory = [];
+
+        // ================================
+        // CONSOLE LOGGER
+        // Shows each step of the fetch
+        // ================================
+        function log(message, type = 'info') {
+            const console_el = document.querySelector('#console');
+            const time = new Date().toLocaleTimeString();
+            console_el.innerHTML = `
+                <div class="console-line">
+                    <span class="time">${time}</span>
+                    <span class="${type}">${message}</span>
+                </div>
+            ` + console_el.innerHTML;
+        }
+
+        // ================================
+        // FORMAT POPULATION
+        // 1000000 → 1,000,000
+        // ================================
+        function formatPopulation(num) {
+            return num.toLocaleString();
+        }
+
+        // ================================
+        // SHOW LOADING STATE
+        // ================================
+        function showLoading(country) {
+            document.querySelector('#result').innerHTML = `
+                <div class="state loading">
+                    ⏳ Calling API for "${country}"...
+                </div>
+            `;
+        }
+
+        // ================================
+        // SHOW ERROR STATE
+        // ================================
+        function showError(message) {
+            document.querySelector('#result').innerHTML = `
+                <div class="state error">
+                    ❌ ${message}
+                </div>
+            `;
+        }
+
+        // ================================
+        // DISPLAY COUNTRY DATA
+        // Receives the API response object
+        // ================================
+        function displayCountry(country) {
+
+            // Destructure the fields we need
+            const {
+                name,
+                flags,
+                capital,
+                population,
+                area,
+                region,
+                subregion,
+                currencies,
+                languages,
+                borders
+            } = country;
+
+            // Extract currency name
+            const currencyCode = Object.keys(currencies)[0];
+            const currencyName = currencies[currencyCode].name;
+            const currencySymbol = currencies[currencyCode].symbol;
+
+            // Extract languages
+            const languageList = Object.values(languages).join(', ');
+
+            // Format area
+            const formattedArea = area.toLocaleString() + ' km²';
+
+            // Build HTML
+            document.querySelector('#result').innerHTML = `
+                <div class="country-card">
+                    <div class="country-flag">
+                        <img src="${flags.png}" alt="${name.common} flag" 
+                            style="width:120px; border-radius:6px; border:1px solid #333;" />
+                    </div>
+                    <div>
+                        <div class="country-name">${name.common}</div>
+                        <div class="country-official">${name.official}</div>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Capital</div>
+                                <div class="info-value">${capital?.[0] ?? 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Population</div>
+                                <div class="info-value">${formatPopulation(population)}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Area</div>
+                                <div class="info-value">${formattedArea}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Region</div>
+                                <div class="info-value">${region}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Currency</div>
+                                <div class="info-value">${currencyName} (${currencySymbol})</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Languages</div>
+                                <div class="info-value">${languageList}</div>
+                            </div>
+                        </div>
+
+                        <div class="borders-row">
+                            <span class="borders-label">Borders:</span>
+                            ${borders
+                    ? borders.map(b => `<span class="border-tag" onclick="searchCountry('${b}')">${b}</span>`).join('')
+                    : '<span style="color:#555;font-size:0.85rem">No bordering countries</span>'
+                }
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ================================
+        // ADD TO SEARCH HISTORY
+        // ================================
+        function addToHistory(country) {
+            if (!searchHistory.includes(country)) {
+                searchHistory.unshift(country);
+                if (searchHistory.length > 6) searchHistory.pop();
+
+                const historyList = document.querySelector('#history-list');
+                historyList.innerHTML = searchHistory.map(c => `
+                    <span class="history-tag" onclick="searchCountry('${c}')">${c}</span>
+                `).join('');
+            }
+        }
+
+        // ================================
+        // MAIN FETCH FUNCTION
+        // This is where the magic happens
+        // ================================
+        async function searchCountry(countryName) {
+
+            // Get value from input or use passed parameter
+            const query = countryName || document.querySelector('#country-input').value.trim();
+
+            if (!query) {
+                showError('Please enter a country name');
+                return;
+            }
+
+            // Update input if called from border tag or history
+            document.querySelector('#country-input').value = query;
+
+            const btn = document.querySelector('#search-btn');
+            btn.disabled = true;
+            btn.textContent = 'Searching...';
+
+            // ── STEP 1: Show loading
+            showLoading(query);
+            log(`Starting fetch for: "${query}"`, 'info');
+
+            try {
+                // ── STEP 2: Call the API
+                // If 3 letters — it's a country code from border tag
+                // If longer — it's a country name from search input
+                const isCode = query.length === 3;
+                const url = isCode
+                    ? `https://restcountries.com/v3.1/alpha/${query}`
+                    : `https://restcountries.com/v3.1/name/${query}`;
+                log(`GET ${url}`, 'info');
+
+                const response = await fetch(url);
+                log(`Response status: ${response.status} ${response.ok ? '✅ OK' : '❌ Error'}`,
+                    response.ok ? 'success' : 'error');
+
+                // ── STEP 3: Handle non-200 responses
+                if (!response.ok) {
+                    throw new Error(`Country "${query}" not found`);
+                }
+
+                // ── STEP 4: Parse JSON
+                const data = await response.json();
+                log(`Parsed JSON — received ${data.length} result(s)`, 'success');
+                log(`Fields available: ${Object.keys(data[0]).slice(0, 6).join(', ')}...`, 'data');
+
+                // ── STEP 5: Display first result
+                displayCountry(data[0]);
+                addToHistory(data[0].name.common);
+                log(`Displayed: ${data[0].name.common} ✅`, 'success');
+
+            } catch (error) {
+                // ── STEP 6: Handle errors
+                showError(error.message);
+                log(`Error: ${error.message}`, 'error');
+            }
+
+            // Re-enable button
+            btn.disabled = false;
+            btn.textContent = 'Search';
+        }
+
+        // ── Allow Enter key to search
+        document.querySelector('#country-input')
+            .addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') searchCountry();
+            });
+
+        // ── Load a default country on startup
+        searchCountry('India');
+
+    </script>
+</body>
+
+</html>
