@@ -106,6 +106,7 @@
 
     <div id="weather-loadstate"></div>
 
+    <script src="config.js"></script>
     <script>
 
         // ============================
@@ -208,7 +209,7 @@
 
                 // const data = weatherData.filter(weather => weather.cityName.toLowerCase() === city.toLowerCase());
                 // Fetch from API
-                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=8afe8d484f4f0a9a7df7602403f884f9&units=imperial`;
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${CONFIG.WEATHER_API_KEY}&units=imperial`;
 
                 const response = await fetch(url);
 
