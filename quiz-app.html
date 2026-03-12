@@ -64,6 +64,12 @@
             border-color: #2E75B6;
             background: #0d1a2a;
         }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
     </style>
 
 </head>
@@ -88,8 +94,12 @@
         <div id="score">Score: <span id="score-value">0</span></p>
         </div>
 
-        <!-- Next button -->
-        <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
+        <div class="btn-row">
+            <button id="prev-btn" onclick="prevQues()">Previous Question</button>
+            <!-- Next button -->
+            <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
+        </div>
+
     </div>
 
     <!-- Final Screen-->
@@ -161,6 +171,22 @@
         // ================================
         function loadQuestion() {
 
+
+            if (currentQuestion === 0) {
+                document.querySelector('#prev-btn').style.display = 'none'
+            } else {
+                document.querySelector('#prev-btn').style.display = 'block';
+            }
+            /*
+            if (currentQuestion === 0) {
+                document.querySelector('#prev-btn').disabled = true;
+                document.querySelector('#prev-btn').style.opacity = '0.3';
+            } else {
+                document.querySelector('#prev-btn').disabled = false;
+                document.querySelector('#prev-btn').style.opacity = '1';
+            }
+                */
+
             // Step 1 - get the current question object from array
             const current = questions[currentQuestion];
 
@@ -203,6 +229,15 @@
 
             // Disable all buttons after answering
             document.querySelectorAll('#options-container button').forEach(btn => btn.disabled = true);
+        }
+
+        // ================================
+        // PREVIOUS QUESTION
+        // ================================
+        function prevQues() {
+            currentQuestion--;
+            document.querySelector('#feedback').textContent = '';
+            loadQuestion();
         }
 
         // ================================
