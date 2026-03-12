@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RSirri's Weather App</title>
+
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #0a0a0a;
+            color: #2E75B6;
+        }
+
+        h1 {
+            color: #2E75B6;
+            margin-bottom: 8px;
+        }
+
+        .weather-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        button {
+            padding: 12px 28px;
+            background: #2E75B6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #1a5a9a;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 16px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #2E75B6;
+        }
+
+        .weather-info {
+            background: #111;
+            /* dark surface */
+            border: 1px solid #333;
+            /* subtle border */
+            border-radius: 10px;
+            /* rounded corners */
+            padding: 32px;
+            /* breathing room inside */
+            max-width: 500px;
+            /* not too wide */
+            margin: 40px auto;
+            /* centered on page */
+        }
+
+        #weather-feedback {
+            color: #f85149;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        #weather-loadstate {
+            color: #d29922;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Welcome to weather information report</h1>
+
+    <!-- Search Bar for Weather information -->
+    <div class="weather-container" id="weather-container">
+        <input id="city-input" placeholder="search for city weather...(e.g, Atlanta, london, Syndey)" />
+        <button id="weather-btn" onclick="searchCity()">Search</button>
+    </div>
+
+    <!-- Weather Card to display out-->
+    <div class="weather-info">
+        <p id="weather-city-name"></p>
+        <p id="weather-temp"></p>
+        <p id="weather-desc"></p>
+        <p id="weather-humidity"></p>
+        <p id="weather-windspeed"></p>
+    </div>
+
+    <div id="weather-feedback"></div>
+
+    <div id="weather-loadstate"></div>
+
+    <script>
+
+        // ============================
+        // BUILD STATIC WEATHER INFO
+        // ============================
+        const weatherData = [
+            {
+                cityName: "Atlanta",
+                state: "GA",
+                temperatures: {
+                    fahrenheit: 48,
+                    centigrade: 7
+                },
+                weatherDescription: "Its cloudy and rainy",
+                humidity: "68%",
+                windSpeed: {
+                    miles: 19,
+                    km: 30.4
+                }
+            },
+            {
+                cityName: "Omaha",
+                state: "NE",
+                temperatures: {
+                    fahrenheit: 42,
+                    centigrade: 5
+                },
+                weatherDescription: "Sunny",
+                humidity: "49%",
+                windSpeed: {
+                    miles: 16,
+                    km: 25.6
+                }
+            },
+            {
+                cityName: "Jersey City",
+                state: "NJ",
+                temperatures: {
+                    fahrenheit: 42,
+                    centigrade: 5
+                },
+                weatherDescription: "Rain Forecasted",
+                humidity: "75%",
+                windSpeed: {
+                    miles: 13,
+                    km: 20.8
+                }
+            },
+            {
+                cityName: "New York",
+                state: "NY",
+                temperatures: {
+                    fahrenheit: 42,
+                    centigrade: 5
+                },
+                weatherDescription: "Raining",
+                humidity: "75%",
+                windSpeed: {
+                    miles: 13,
+                    km: 20.8
+                }
+            },
+            {
+                cityName: "Columbus",
+                state: "OH",
+                temperatures: {
+                    fahrenheit: 38,
+                    centigrade: 4
+                },
+                weatherDescription: "Sunny",
+                humidity: "47%",
+                windSpeed: {
+                    miles: 9,
+                    km: 14.4
+                }
+            }
+
+        ];
+
+        // ===============================
+        // SEARCH CITY
+        // ===============================
+        async function searchCity(cityName) {
+
+            const city = cityName || document.querySelector('#city-input').value.trim();
+
+            if (!city) {
+                showError('Please enter a city name');
+                return;
+            }
+
+            const btn = document.querySelector('#weather-btn');
+            btn.disabled = true;
+            btn.textContent = 'Searching...';
+
+            // - Step 1 show loading status
+            showLoading(city);
+
+            try {
+
+                // const data = weatherData.filter(weather => weather.cityName.toLowerCase() === city.toLowerCase());
+                // Fetch from API
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=8afe8d484f4f0a9a7df7602403f884f9&units=imperial`;
+
+                const response = await fetch(url);
+
+                /*
+                if (data.length === 0) {
+                    throw new Error(`City "${city}" not found`);
+                }
+                */
+                if (!response.ok) {
+                    throw new Error(`City "${city}" not found`);
+                }
+
+                const data = await response.json();
+
+                displayCity(data);
+
+            } catch (error) {
+                // Handle Errors
+                showError(error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Search';
+                document.querySelector('#city-input').value = '';
+            }
+
+        }
+
+        // ================================
+        // SHOW ERROR STATE
+        // ================================
+        function showError(message) {
+            document.querySelector('#weather-feedback').innerHTML = ` ❌ ${message} `;
+        }
+
+        // ================================
+        // SHOW LOADING STATE
+        // ================================
+        function showLoading(city) {
+            document.querySelector('#weather-loadstate').innerHTML = ` ⏳ loading weather informations for city: "${city}"... `;
+        }
+
+        // ================================
+        // DISPLAY CITY
+        // ================================
+        function displayCity(city) {
+
+            document.querySelector('#weather-loadstate').innerHTML = '';
+            document.querySelector('#weather-feedback').innerHTML = '';
+
+            // Destructure the fields
+            /*
+            const {
+                cityName,
+                state,
+                temperatures: {
+                    fahrenheit,
+                    centigrade,
+                },
+                weatherDescription,
+                humidity,
+                windSpeed: {
+                    miles,
+                    km,
+                }
+            } = city;
+            */
+            const {
+                weather: [
+                    {
+                        description,
+                    }
+                ],
+                main: {
+                    temp,
+                    humidity
+                },
+                wind: {
+                    speed
+                },
+                sys: {
+                    country
+                },
+                name
+            } = city;
+            /*
+            document.querySelector(".weather-info").innerHTML = `
+                <p>City:${cityName}, ${state}</p>
+                <p>Temperature:${fahrenheit}°F / ${centigrade}°C</p>
+                <p>Condition:${weatherDescription}</p>
+                <p>Humidity: ${humidity}</p>
+                <p>Wind: ${miles} mph / ${km} km/h</p>
+            `;
+            */
+            const capitalDesc = description.charAt(0).toUpperCase() + description.slice(1);
+            document.querySelector(".weather-info").innerHTML = `
+                <p>City:${name}, ${country}</p>
+                <p>Temperature: ${Math.round(temp)}°F</p>
+                <p>Condition:${capitalDesc}</p>
+                <p>Humidity: ${humidity}%</p>
+                <p>Wind: ${speed} mph</p>
+            `;
+
+        }
+
+        // ── Allow Enter key to search
+        document.querySelector('#city-input')
+            .addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') searchCity();
+            });
+
+        // searchCity();
+
+    </script>
+
+</body>
+
+</html>
