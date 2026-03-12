@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SAP Quiz</title>
+
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #0a0a0a;
+            color: #2E75B6;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 8px 4px;
+            background: #2E75B6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #1a5a9a;
+        }
+
+        .question-container {
+            background: #111;
+            /* dark surface */
+            border: 1px solid #333;
+            /* subtle border */
+            border-radius: 10px;
+            /* rounded corners */
+            padding: 32px;
+            /* breathing room inside */
+            max-width: 600px;
+            /* not too wide */
+            margin: 40px auto;
+            /* centered on page */
+        }
+
+        #feedback {
+            margin: 16px 0;
+            font-size: 1rem;
+            font-weight: 700;
+            min-height: 24px;
+        }
+
+        #options-container button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 8px 0;
+            padding: 14px 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+        }
+
+        #options-container button:hover {
+            border-color: #2E75B6;
+            background: #0d1a2a;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1>SAP Quiz</h1>
+
+    <p>Welcome to the SAP Quiz!</p>
+
+    <!-- Display Question Container -->
+    <div class="question-container" id="question-container">
+        <p id="question-counter"></p>
+        <p id="question-text">What does SAP stand for?</p>
+        <div id="options-container">
+        </div>
+
+        <!-- Feedback Message -->
+        <div id="feedback"></div>
+
+        <!-- Score -->
+        <div id="score">Score: <span id="score-value">0</span></p>
+        </div>
+
+        <!-- Next button -->
+        <button id="next-btn" onclick="loadNextQuestion()">Next Question</button>
+    </div>
+
+    <!-- Final Screen-->
+    <div id="final-screen"></div>
+
+    <script>
+
+        // ================================
+        // BUILD QUESTIONS & ANSWERS
+        // ================================
+        const questions = [
+            {
+                question: "What does SAP stand for?",
+                options: [
+                    "Systems, Applications, and Products",
+                    "Software, Analytics, and Programming",
+                    "Solutions, Architecture, and Performance",
+                    "Services, Applications, and Processes"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Which module in SAP is responsible for financial accounting?",
+                options: [
+                    "MM (Materials Management)",
+                    "SD (Sales and Distribution)",
+                    "FI (Financial Accounting)",
+                    "HR (Human Resources)"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "What is the primary database used by SAP HANA?",
+                options: [
+                    "Oracle Database",
+                    "Microsoft SQL Server",
+                    "SAP HANA Database",
+                    "MySQL"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "Which SAP module is focused on supply chain management?",
+                options: [
+                    "PP (Production Planning)",
+                    "EWM (Extended Warehouse Management)",
+                    "PM (Plant Maintenance)",
+                    "OTC (Order to Cash)"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "What programming language is primarily used for SAP development?",
+                options: [
+                    "Java",
+                    "Python",
+                    "ABAP (Advanced Business Application Programming)",
+                    "C#"
+                ],
+                correctAnswer: 2
+            }
+        ];
+
+        let currentQuestion = 0; // which question we're on
+        let score = 0;          // user's score
+
+        // ================================
+        // LOAD QUESTION
+        // ================================
+        function loadQuestion() {
+
+            // Step 1 - get the current question object from array
+            const current = questions[currentQuestion];
+
+            document.querySelector('#question-counter').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+
+            // Step 2 - Put question text into question text
+            document.querySelector('#question-text').textContent = current.question;
+
+            // Step 3 - Clear Options Container
+            const optionsContainer = document.querySelector('#options-container');
+            optionsContainer.innerHTML = '';
+
+            // Step 4 - Loop through options and create buttons
+            current.options.forEach((option, index) => {
+                document.querySelector('#options-container').innerHTML += `
+                    <button onclick="checkAnswer(${index})">${option}</button>
+                `;
+            });
+
+        }
+
+        // ================================
+        // Call it once to load first question
+        // ================================
+        loadQuestion();
+
+        // ================================
+        // CHECK ANSWER
+        // ================================
+        function checkAnswer(selectedIndex) {
+            const current = questions[currentQuestion];
+
+            if (selectedIndex === current.correctAnswer) {
+                document.querySelector('#feedback').textContent = 'Correct!';
+                score++;
+                document.querySelector('#score-value').textContent = score;
+            } else {
+                document.querySelector('#feedback').textContent = 'Wrong! The correct answer was: ' + current.options[current.correctAnswer];
+            }
+
+            // Disable all buttons after answering
+            document.querySelectorAll('#options-container button').forEach(btn => btn.disabled = true);
+        }
+
+        // ================================
+        // LOAD NEXT QUESTION
+        // ================================
+        function loadNextQuestion() {
+            currentQuestion++;
+            document.querySelector('#feedback').textContent = '';
+
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+                document.querySelector('#feedback').textContent = '';
+            } else {
+                document.querySelector('#final-screen').innerHTML = `
+                    <h2>Quiz Completed!</h2>
+                    <p>Your final score is: ${score} out of ${questions.length}</p>
+                    <button onclick="restartQuiz()">Restart</button>
+                `;
+                document.querySelector('#question-container').style.display = 'none';
+                document.querySelector('#next-btn').style.display = 'none';
+            }
+        }
+
+        // ================================
+        // RESTART BUTTON
+        // ================================
+        function restartQuiz() {
+
+            currentQuestion = 0; // which question we're on
+            score = 0;          // user's score
+
+            document.querySelector('#score-value').textContent = score;
+            document.querySelector('#final-screen').innerHTML = '';
+
+            document.querySelector('#question-container').style.display = 'block';
+            document.querySelector('#next-btn').style.display = 'block';
+
+            loadQuestion();
+
+        }
+
+    </script>
+
+</body>
+
+</html>
