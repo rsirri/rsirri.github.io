@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Github User Finder</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: #0a0a0a;
+            color: #2E75B6;
+        }
+
+        h1 {
+            color: #2E75B6;
+            margin-bottom: 8px;
+        }
+
+        .finder-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        button {
+            font-family: 'Press Start 2P', cursive;
+            padding: 12px 28px;
+            background: #2E75B6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: .5rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #1a5a9a;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 16px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #2E75B6;
+        }
+
+        .finder-card {
+            background: #111;
+            /* dark surface */
+            border: 1px solid #333;
+            /* subtle border */
+            border-radius: 10px;
+            /* rounded corners */
+            padding: 32px;
+            /* breathing room inside */
+            max-width: 1075px;
+            /* not too wide */
+            margin: 40px auto;
+            /* centered on page */
+        }
+
+        #finder-feedback {
+            color: #f85149;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        #finder-loadstate {
+            color: #d29922;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Github user finder</h1>
+
+    <!-- Search bar for Github user input-->
+    <div class="finder-container" id="finder-container">
+        <input id="finder-input" placeholder="search for github user..." />
+        <button id="finder-btn" onclick="searchUser()">Search</button>
+    </div>
+
+    <!-- Display Guthub user profile card -->
+    <div class="finder-card">
+
+        <p id="finder-avatar"></p>
+        <p id="finder-name"></p>
+        <p id="finder-login"></p>
+        <p id="finder-bio"></p>
+        <p id="finder-company"></p>
+        <p id="finder-location"></p>
+        <p id="finder-blog"></p>
+        <p id="finder-email"></p>
+        <p id="finder-publicurl"></p>
+        <p id="finder-followers"></p>
+        <p id="finder-htmlurl"></p>
+
+        <div id="finder-feedback"></div>
+
+        <div id="finder-loadstate"></div>
+    </div>
+
+    <script>
+
+        // ===============================
+        // SEARCH GITHUB USER
+        // ===============================
+        async function searchUser(userName) {
+
+            // Check and assign the value from User inputs
+            const user = userName || document.querySelector('#finder-input').value.trim();
+
+            // if User doesn't enter any values then show error and exit functions
+            if (!user) {
+                showError('Please proivde user to search...');
+                return;
+            }
+
+            // When user hits button, set button disabled and show text on button as searching
+            const btn = document.querySelector('#finder-btn');
+            btn.disabled = true;
+            btn.textContent = 'Searching...';
+
+            // Show info for loadting status
+            showLoading(user);
+
+            try {
+
+                // Set URL for Github user search
+                const url = `https://api.github.com/users/${user}`;
+
+                // get response
+                const response = await fetch(url);
+
+                // Check response
+                if (!response.ok) {
+                    throw new Error(`User "${user}" not exists`);
+                }
+
+                const data = await response.json();
+                // Display data
+                displayGithubProfile(data);
+
+            } catch (error) {
+                showError(error.message)
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Search';
+                document.querySelector('#finder-input').value = '';
+            }
+
+        }
+
+        // ================================
+        // DISPLAY CITY
+        // ================================
+        function displayGithubProfile(user) {
+
+            document.querySelector('#finder-loadstate').innerHTML = '';
+            document.querySelector('#finder-feedback').innerHTML = '';
+
+            const {
+                avatar_url,
+                name,
+                login,
+                bio,
+                company,
+                location,
+                blog,
+                email,
+                public_repos,
+                followers,
+                html_url,
+            } = user
+
+            document.querySelector('.finder-card').innerHTML = `
+                <img src="${avatar_url}" width="80" style="border-radius:50%;"/>
+                <p>Full name: ${name ?? 'Not provided'}</p>
+                <p>User name: ${login}</p>
+                <p>Bio: ${bio ?? 'no bio'}</p>
+                <p>Company: ${company ?? 'not provided'}</p>
+                <p>Location: ${location ?? 'not provided'}</p>
+                <p>Blog: ${blog ? `<a href="${blog}" target="_blank" style="color:#2E75B6;">${blog}</a>` : 'No website'}</p>
+                <p>Email: ${email ?? 'not provided'}</p>
+                <p>Public repo: ${public_repos}</p>
+                <p>followers: ${followers}</p>
+                <a href="${html_url}" target="_blank" style="color:#2E75B6;">View GitHub Profile →</a>
+            `;
+
+        }
+
+        // ================================
+        // SHOW ERROR STATE
+        // ================================
+        function showError(message) {
+            document.querySelector('#finder-feedback').innerHTML = ` ❌ ${message} `;
+        }
+
+        // ================================
+        // SHOW LOADING STATE
+        // ================================
+        function showLoading(user) {
+            document.querySelector('#finder-loadstate').innerHTML = ` ⏳ loading github user profile: "${user}"... `;
+        }
+
+        // - Allow user to Enter kety to search
+        document.querySelector('#finder-input')
+            .addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') searchUser();
+            });
+
+    </script>
+
+</body>
+
+</html>
