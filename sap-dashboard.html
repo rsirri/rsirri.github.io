@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SAP S/4HANA Dashboard</title>
+
+    <style>
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="dashboard-header">
+        <h1>SAP S/4HANA | SD Dashboard</h1>
+        <p id="last-updated"></p>
+    </div>
+
+    <!-- Operational KPIs -->
+    <section class="kpi-section">
+        <h2>Operational</h2>
+        <div class="kpi-grid" id="operational-grid"></div>
+    </section>
+
+    <!-- Financial KPIs -->
+    <section class="kpi-section">
+        <h2>Financial</h2>
+        <div class="kpi-grid" id="financial-grid"></div>
+    </section>
+
+    <!-- Logistics KPIs -->
+    <section class="kpi-section">
+        <h2>Logistics</h2>
+        <div class="kpi-grid" id="logistics-grid"></div>
+    </section>
+
+    <!-- Risk KPIs -->
+    <section class="kpi-section">
+        <h2>Risk</h2>
+        <div class="kpi-grid" id="risk-grid"></div>
+    </section>
+
+    <script>
+
+        // ============================
+        // PREPARING STATIC KPI DATA
+        // ============================
+        const kpiData = {
+            operational: [
+                {
+                    title: 'Open Sales Orders',
+                    value: 142,
+                    unit: 'Millions',
+                    status: 'normal',
+                    table: 'VBAK'
+                }
+            ]
+        };
+
+    </script>
+
+</body>
+
+</html>
