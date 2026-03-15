@@ -9,6 +9,7 @@
             font-family: 'Courier New', Courier, monospace;
             background: #0a0a0a;
             color: #2E75B6;
+            margin: 0;
         }
 
         h1 {
@@ -22,22 +23,57 @@
             margin-bottom: 8px;
         }
 
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .dashboard-header {
+            padding: 0 0 24px 0;
+        }
+
         /* card base style */
         .kpi-card {
             font-family: 'Courier New', Courier, monospace;
             background: #111;
-            /* dark surface */
             border: 1px solid #333;
-            /* subtle border */
-            border-radius: 10px;
-            /* rounded corners */
-            padding: 40px;
-            /* breathing room inside */
-            max-width: 100px;
-            /* not too wide */
-            margin: 40px auto;
-            /* centered on page */
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
+        .kpi-card.selected {
+            background: #161b22;
+            box-shadow: 0 0 0 1px rgba(106, 169, 255, 0.35), 0 8px 18px rgba(0, 0, 0, 0.45);
+        }
+
+        .kpi-section {
+            margin-bottom: 48px;
+        }
+
+        .kpi-section h2 {
+            border-bottom: 1px solid #1f2a36;
+            padding-bottom: 8px;
+            margin-bottom: 18px;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        .kpi-meta {
+            font-size: 0.75rem;
+            color: #777;
+        }
+
 
         /* status colors — use border-left for a professional look */
         .status-normal {
@@ -55,15 +91,15 @@
         /* grid layout — try this */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 16px;
-            margin-bottom: 32px;
+            margin-bottom: 20px;
         }
 
         .kpi-title {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #aaaaaa;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .kpi-value {
@@ -102,6 +138,7 @@
             /* scroll when content exceeds height */
             border: 1px solid #333;
             border-radius: 6px;
+            background: #0d1117;
         }
 
         /* Keep header fixed while scrolling */
@@ -123,6 +160,10 @@
             padding: 12px 16px;
             text-align: left;
             border-bottom: 2px solid #2E75B6;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: #6aa9ff;
         }
 
         /* Data rows */
@@ -162,38 +203,40 @@
 
 <body>
 
-    <div class="dashboard-header">
-        <h1>SAP S/4HANA | SD Dashboard</h1>
-        <p id="last-updated"></p>
+    <div class="page-container">
+        <div class="dashboard-header">
+            <h1>SAP S/4HANA | SD Dashboard</h1>
+            <p id="last-updated"></p>
+        </div>
+
+        <!-- Operational KPIs -->
+        <section class="kpi-section">
+            <h2>Operational</h2>
+            <div class="kpi-grid" id="operational-grid"></div>
+            <div class="kpi-table" id="operational-table"></div>
+        </section>
+
+        <!-- Financial KPIs -->
+        <section class="kpi-section">
+            <h2>Financial</h2>
+            <div class="kpi-grid" id="financial-grid"></div>
+            <div class="kpi-table" id="financial-table"></div>
+        </section>
+
+        <!-- Logistics KPIs -->
+        <section class="kpi-section">
+            <h2>Logistics</h2>
+            <div class="kpi-grid" id="logistics-grid"></div>
+            <div class="kpi-table" id="logistics-table"></div>
+        </section>
+
+        <!-- Risk KPIs -->
+        <section class="kpi-section">
+            <h2>Risk</h2>
+            <div class="kpi-grid" id="risk-grid"></div>
+            <div class="kpi-table" id="risk-table"></div>
+        </section>
     </div>
-
-    <!-- Operational KPIs -->
-    <section class="kpi-section">
-        <h2>Operational</h2>
-        <div class="kpi-grid" id="operational-grid"></div>
-        <div class="kpi-table" id="operational-table"></div>
-    </section>
-
-    <!-- Financial KPIs -->
-    <section class="kpi-section">
-        <h2>Financial</h2>
-        <div class="kpi-grid" id="financial-grid"></div>
-        <div class="kpi-table" id="financial-table"></div>
-    </section>
-
-    <!-- Logistics KPIs -->
-    <section class="kpi-section">
-        <h2>Logistics</h2>
-        <div class="kpi-grid" id="logistics-grid"></div>
-        <div class="kpi-table" id="logistics-table"></div>
-    </section>
-
-    <!-- Risk KPIs -->
-    <section class="kpi-section">
-        <h2>Risk</h2>
-        <div class="kpi-grid" id="risk-grid"></div>
-        <div class="kpi-table" id="risk-table"></div>
-    </section>
 
     <script>
 
@@ -469,11 +512,11 @@
                     table: 'VBRK',
                     columns: [
                         { key: 'invoiceNo', label: 'Invoice No' },
-                        { key: 'cancelledDoc', label: 'Cancelled Docu' },
+                        { key: 'cancelledDoc', label: 'Cancelled Doc' },
                         { key: 'customer', label: 'Customer' },
                         { key: 'cancelDate', label: 'Cancel Date' },
                         { key: 'amount', label: 'Amount' },
-                        { key: 'cancelReason', label: 'Cancel Status' }
+                        { key: 'cancelReason', label: 'Cancel Reason' }
                     ],
                     records: [
                         {
@@ -537,7 +580,7 @@
                     columns: [
                         { key: 'salesOrg', label: 'Sales Org' },
                         { key: 'distributionChannel', label: 'Distribution Channel' },
-                        { key: 'division', label: 'Divison' },
+                        { key: 'division', label: 'Division' },
                         { key: 'openOrders', label: 'Open Orders' },
                         { key: 'totalValue', label: 'Total Value' },
                         { key: 'currency', label: 'Currency' }
@@ -594,7 +637,7 @@
                     ]
                 },
                 {
-                    title: 'Billing Due Date',
+                    title: 'Billing Due Today',
                     value: 78,
                     unit: '',
                     status: 'critical',
@@ -672,7 +715,7 @@
                         { key: 'customer', label: 'Customer' },
                         { key: 'plannedDate', label: 'Planned Date' },
                         { key: 'actualDate', label: 'Actual Date' },
-                        { key: 'delayDays', label: 'Delays Days' }
+                        { key: 'delayDays', label: 'Delay Days' }
                     ],
                     records: [
                         {
@@ -930,32 +973,82 @@
         // ============================
         function renderKPIs() {
 
-            const date = new Date(Date.now());
-            const formattedDate = date.toLocaleDateString('en-US', {
+            // const date = new Date(Date.now());
+            const formattedDate = new Date().toLocaleString('en-US', {
                 month: 'short',
                 day: 'numeric',
+                year: 'numeric',
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit'
             });
-            document.querySelector('#last-updated').innerHTML = formattedDate;
+            document.querySelector('#last-updated').textContent = `Last update: ${formattedDate}`;
 
             Object.keys(kpiData).forEach(category => {
 
                 const grid = document.querySelector(`#${category}-grid`);
-
+                grid.innerHTML = '';
+                /*
                 kpiData[category].forEach((kpi, index) => {
                     grid.innerHTML += `
                         <div class="kpi-card status-${kpi.status}"
                             onclick="showRecords('${category}', ${index})">
-                            <p class="kpi-title">${kpi.title}</>
-                            <p class="kpi-value">${kpi.value} ${kpi.unit}</>
+                            <p class="kpi-title">${kpi.title}</p>
+                            <p class="kpi-value">${kpi.value} ${kpi.unit}</p>
                             <p class="kpi-table">${kpi.table}</p>
                         </div>
                     `;
                 });
+                
+                kpiData[category].forEach((kpi, index) => {
+                    grid.innerHTML += `
+                        <div class="kpi-card status-${kpi.status}"
+                            onclick="showRecords('${category}', ${index})">
+                            <p class="kpi-title">${kpi.title}</p>
+                            <p class="kpi-value">${kpi.value} ${kpi.unit}</p>
+                            <p class="kpi-meta">${kpi.records.length}</p>
+                        </div>
+                    `;
+                });
+                */
 
+                kpiData[category].forEach((kpi, index) => {
+                    grid.innerHTML += `
+                <div class="kpi-card status-${kpi.status}" data-category="${category}" data-index="${index}">
+                    <p class="kpi-title">${kpi.title}</p>
+                    <p class="kpi-value">${kpi.value} ${kpi.unit}</p>
+                    <p class="kpi-meta">${kpi.records.length} records</p>
+                </div>
+            `;
+                });
             });
+
+            /*
+            document.querySelectorAll('.kpi-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const category = card.dataset.category;
+                    const index = Number(card.dataset.index);
+                    showRecords(category, index);
+                });
+            });
+            */
+            document.querySelectorAll('.kpi-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.kpi-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+
+                    const category = card.dataset.category;
+                    const index = Number(card.dataset.index);
+                    showRecords(category, index);
+                });
+            });
+
+
+            showRecords('operational', 0);
+            const firstCard = document.querySelector('#operational-grid .kpi-card');
+            if (firstCard) {
+                firstCard.classList.add('selected');
+            }
 
         }
 
@@ -970,7 +1063,7 @@
             const gridTable = document.querySelector(`#${category}-table`);
 
             if (records.length === 0) {
-                gridTable.innerHTML = '<p style="color:#555;">No records available for ${kpi.title}</p>';
+                gridTable.innerHTML = `<p style="color:#555;">No records available for ${kpi.title}</p>`;
                 return;
             }
 
@@ -978,9 +1071,17 @@
             const headers = columns.map(col => `<th>${col.label}</th>`).join('');
 
             // Build rows from records using column keys
+            /*
             const rows = records.map(record => {
                 cells = columns
                     .map(col => `<td>${record[col.key] ?? '-'}</td>`)
+                    .join('');
+                return `<tr>${cells}</tr>`;
+            }).join('');
+            */
+            const rows = records.map(record => {
+                const cells = columns
+                    .map(col => `<td>${formatCellValue(col.key, record[col.key])}</td>`)
                     .join('');
                 return `<tr>${cells}</tr>`;
             }).join('');
@@ -1022,7 +1123,7 @@
             */
 
             gridTable.innerHTML = `
-                <h3>${kpi.title} — Records</h3>
+                <h3>${kpi.title} — Details</h3>
                 <div class="table-container">
                     <table>
                         <thead><tr>${headers}</tr></thead>
@@ -1031,6 +1132,23 @@
                 </div>
             `;
 
+        }
+
+        // ============================
+        // FORMAT CELL VALUE
+        // ============================
+        function formatCellValue(key, value) {
+            if (value === null || value === undefined || value === '') {
+                return '-';
+            }
+
+            const amountFields = ['netValue', 'amount', 'amountDue', 'blockedAmount', 'totalValue'];
+
+            if (amountFields.includes(key) && typeof value === 'number') {
+                return `$${value.toLocaleString('en-US')}`;
+            }
+
+            return value;
         }
 
         renderKPIs();
