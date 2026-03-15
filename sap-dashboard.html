@@ -77,6 +77,85 @@
             font-size: 0.7rem;
             color: #555;
         }
+
+        /* Table container */
+        #operational-table,
+        #financial-table,
+        #logistics-table,
+        #risk-table {
+            margin-top: 16px;
+            margin-bottom: 32px;
+        }
+
+        /* Table itself */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        /* Wrap table in scrollable container */
+        .table-container {
+            max-height: 300px;
+            /* fixed height */
+            overflow-y: auto;
+            /* scroll when content exceeds height */
+            border: 1px solid #333;
+            border-radius: 6px;
+        }
+
+        /* Keep header fixed while scrolling */
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #1a1a2e;
+            /* must set background or rows show through */
+        }
+
+        /* Header row */
+        thead tr {
+            background: #1a1a2e;
+            color: #2E75B6;
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 2px solid #2E75B6;
+        }
+
+        /* Data rows */
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #222;
+            color: #e0e0e0;
+        }
+
+        /* Alternating row colors */
+        tbody tr:nth-child(even) {
+            background: #111;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: #0a0a0a;
+        }
+
+        /* Hover effect */
+        tbody tr:hover {
+            background: #1a1a2e;
+            cursor: pointer;
+        }
+
+        /* Table title */
+        #operational-table h3,
+        #financial-table h3,
+        #logistics-table h3,
+        #risk-table h3 {
+            color: #2E75B6;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
     </style>
 
 </head>
@@ -92,24 +171,28 @@
     <section class="kpi-section">
         <h2>Operational</h2>
         <div class="kpi-grid" id="operational-grid"></div>
+        <div class="kpi-table" id="operational-table"></div>
     </section>
 
     <!-- Financial KPIs -->
     <section class="kpi-section">
         <h2>Financial</h2>
         <div class="kpi-grid" id="financial-grid"></div>
+        <div class="kpi-table" id="financial-table"></div>
     </section>
 
     <!-- Logistics KPIs -->
     <section class="kpi-section">
         <h2>Logistics</h2>
         <div class="kpi-grid" id="logistics-grid"></div>
+        <div class="kpi-table" id="logistics-table"></div>
     </section>
 
     <!-- Risk KPIs -->
     <section class="kpi-section">
         <h2>Risk</h2>
         <div class="kpi-grid" id="risk-grid"></div>
+        <div class="kpi-table" id="risk-table"></div>
     </section>
 
     <script>
@@ -124,28 +207,324 @@
                     value: 142,
                     unit: '',
                     status: 'normal',
-                    table: 'VBAK'
+                    table: 'VBAK',
+                    columns: [
+                        { key: 'orderNo', label: 'Order No' },
+                        { key: 'customer', label: 'Customer' },
+                        { key: 'createdDate', label: 'Created Date' },
+                        { key: 'netValue', label: 'Net Value' },
+                        { key: 'deliveryStatus', label: 'Delivery Status' },
+                        { key: 'orderStatus', label: 'Order Status' }
+                    ],
+                    records: [
+                        {
+                            orderNo: 4500012345,
+                            customer: 1000456,
+                            createdDate: '01/12/2026',
+                            netValue: 12500,
+                            deliveryStatus: 'Not Delivered',
+                            orderStatus: 'Open'
+                        },
+                        {
+                            orderNo: 4500012346,
+                            customer: 1000789,
+                            createdDate: '01/13/2026',
+                            netValue: 8420,
+                            deliveryStatus: 'Partially Delivered',
+                            orderStatus: 'Open'
+                        },
+                        {
+                            orderNo: 4500012347,
+                            customer: 1000234,
+                            createdDate: '01/14/2026',
+                            netValue: 15890,
+                            deliveryStatus: 'Not Delivered',
+                            orderStatus: 'Open'
+                        },
+                        {
+                            orderNo: 4500012348,
+                            customer: 1000678,
+                            createdDate: '01/15/2026',
+                            netValue: 3920,
+                            deliveryStatus: 'Partially Delivered',
+                            orderStatus: 'In Process'
+                        },
+                        {
+                            orderNo: 4500012349,
+                            customer: 1000451,
+                            createdDate: '01/15/2026',
+                            netValue: 21950,
+                            deliveryStatus: 'Not Delivered',
+                            orderStatus: 'Open'
+                        },
+                        {
+                            orderNo: 4500012350,
+                            customer: 1000890,
+                            createdDate: '01/16/2026',
+                            netValue: 6740,
+                            deliveryStatus: 'Partially Delivered',
+                            orderStatus: 'In Process'
+                        },
+                        {
+                            orderNo: 4500012351,
+                            customer: 1000321,
+                            createdDate: '01/16/2026',
+                            netValue: 10450,
+                            deliveryStatus: 'Not Delivered',
+                            orderStatus: 'Open'
+                        },
+                        {
+                            orderNo: 4500012352,
+                            customer: 1000567,
+                            createdDate: '01/17/2026',
+                            netValue: 18800,
+                            deliveryStatus: 'Not Delivered',
+                            orderStatus: 'Open'
+                        },
+                        {
+                            orderNo: 4500012353,
+                            customer: 1000765,
+                            createdDate: '01/17/2026',
+                            netValue: 5600,
+                            deliveryStatus: 'Partially Delivered',
+                            orderStatus: 'In Process'
+                        },
+                        {
+                            orderNo: 4500012354,
+                            customer: 1000912,
+                            createdDate: '01/18/2026',
+                            netValue: 13420,
+                            deliveryStatus: 'Not Delivered',
+                            orderStatus: 'Open'
+                        }
+                    ]
                 },
                 {
                     title: 'Deliveries Due Today',
                     value: 158,
                     unit: '',
                     status: 'warning',
-                    table: 'LIKP'
+                    table: 'LIKP',
+                    columns: [
+                        { key: 'deliveryNo', label: 'Delivery No' },
+                        { key: 'salesOrder', label: 'Sales Order' },
+                        { key: 'shipToParty', label: 'Ship-To-Party' },
+                        { key: 'dueDate', label: 'Due Date' },
+                        { key: 'shippingPoint', label: 'Shipping Point' },
+                        { key: 'deliveryStatus', label: 'Delivery Status' }
+                    ],
+                    records: [
+                        {
+                            deliveryNo: 800012301,
+                            salesOrder: 4500012401,
+                            shipToParty: 1000456,
+                            dueDate: '03/14/2026',
+                            shippingPoint: 'SP01',
+                            deliveryStatus: 'Due Today'
+                        },
+                        {
+                            deliveryNo: 800012302,
+                            salesOrder: 4500012402,
+                            shipToParty: 1000789,
+                            dueDate: '03/14/2026',
+                            shippingPoint: 'SP02',
+                            deliveryStatus: 'Picking Pending'
+                        },
+                        {
+                            deliveryNo: 800012303,
+                            salesOrder: 4500012403,
+                            shipToParty: 1000234,
+                            dueDate: '03/14/2026',
+                            shippingPoint: 'SP01',
+                            deliveryStatus: 'Packed'
+                        },
+                        {
+                            deliveryNo: 800012304,
+                            salesOrder: 4500012404,
+                            shipToParty: 1000678,
+                            dueDate: '03/14/2026',
+                            shippingPoint: 'SP03',
+                            deliveryStatus: 'GI Pending'
+                        },
+                        {
+                            deliveryNo: 800012305,
+                            salesOrder: 4500012405,
+                            shipToParty: 1000451,
+                            dueDate: '03/14/2026',
+                            shippingPoint: 'SP02',
+                            deliveryStatus: 'Due Today'
+                        },
+                        {
+                            deliveryNo: 800012306,
+                            salesOrder: 4500012406,
+                            shipToParty: 1000890,
+                            dueDate: '03/14/2026',
+                            shippingPoint: 'SP01',
+                            deliveryStatus: 'Picking Pending'
+                        },
+                        {
+                            deliveryNo: 800012307,
+                            salesOrder: 4500012407,
+                            shipToParty: 1000321,
+                            dueDate: '03/14/2026',
+                            shippingPoint: 'SP04',
+                            deliveryStatus: 'Due Today'
+                        },
+                        {
+                            deliveryNo: 800012308,
+                            salesOrder: 4500012408,
+                            shipToParty: 1000567,
+                            dueDate: '03/14/2026',
+                            shippingPoint: 'SP02',
+                            deliveryStatus: 'Packed'
+                        }
+                    ]
                 },
                 {
                     title: 'Pending Invoices',
                     value: 190,
                     unit: '',
                     status: 'critical',
-                    table: 'VBRK'
+                    table: 'VBRK',
+                    columns: [
+                        { key: 'billingRef', label: 'Billing Ref' },
+                        { key: 'salesOrder', label: 'Sales Order' },
+                        { key: 'customer', label: 'Customer' },
+                        { key: 'billingDate', label: 'Billing Date' },
+                        { key: 'amount', label: 'Amount' },
+                        { key: 'invoiceStatus', label: 'Invoice Status' }
+                    ],
+                    records: [
+                        {
+                            billingRef: 900045101,
+                            salesOrder: 4500012501,
+                            customer: 1000456,
+                            billingDate: '03/12/2026',
+                            amount: 14500,
+                            invoiceStatus: 'Not Generated'
+                        },
+                        {
+                            billingRef: 900045102,
+                            salesOrder: 4500012502,
+                            customer: 1000789,
+                            billingDate: '03/12/2026',
+                            amount: 9800,
+                            invoiceStatus: 'Pending Release'
+                        },
+                        {
+                            billingRef: 900045103,
+                            salesOrder: 4500012503,
+                            customer: 1000234,
+                            billingDate: '03/13/2026',
+                            amount: 22340,
+                            invoiceStatus: 'Not Generated'
+                        },
+                        {
+                            billingRef: 900045104,
+                            salesOrder: 4500012504,
+                            customer: 1000678,
+                            billingDate: '03/13/2026',
+                            amount: 4100,
+                            invoiceStatus: 'Error in Billing'
+                        },
+                        {
+                            billingRef: 900045105,
+                            salesOrder: 4500012505,
+                            customer: 1000451,
+                            billingDate: '03/13/2026',
+                            amount: 17650,
+                            invoiceStatus: 'Pending Release'
+                        },
+                        {
+                            billingRef: 900045106,
+                            salesOrder: 4500012506,
+                            customer: 1000890,
+                            billingDate: '03/14/2026',
+                            amount: 7350,
+                            invoiceStatus: 'Not Generated'
+                        },
+                        {
+                            billingRef: 900045107,
+                            salesOrder: 4500012507,
+                            customer: 1000321,
+                            billingDate: '03/14/2026',
+                            amount: 12890,
+                            invoiceStatus: 'Error in Billing'
+                        },
+                        {
+                            billingRef: 900045108,
+                            salesOrder: 4500012508,
+                            customer: 1000567,
+                            billingDate: '03/14/2026',
+                            amount: 16420,
+                            invoiceStatus: 'Pending Release'
+                        }
+                    ]
                 },
                 {
                     title: 'Cancelled Invoices',
                     value: 23,
                     unit: '',
                     status: 'critical',
-                    table: 'VBRK'
+                    table: 'VBRK',
+                    columns: [
+                        { key: 'invoiceNo', label: 'Invoice No' },
+                        { key: 'cancelledDoc', label: 'Cancelled Docu' },
+                        { key: 'customer', label: 'Customer' },
+                        { key: 'cancelDate', label: 'Cancel Date' },
+                        { key: 'amount', label: 'Amount' },
+                        { key: 'cancelReason', label: 'Cancel Status' }
+                    ],
+                    records: [
+                        {
+                            invoiceNo: 910000101,
+                            cancelledDoc: 920000101,
+                            customer: 1000456,
+                            cancelDate: '03/08/2026',
+                            amount: 4200,
+                            cancelReason: 'Pricing Error'
+                        },
+                        {
+                            invoiceNo: 910000102,
+                            cancelledDoc: 920000102,
+                            customer: 1000789,
+                            cancelDate: '03/09/2026',
+                            amount: 11800,
+                            cancelReason: 'Duplicate Billing'
+                        },
+                        {
+                            invoiceNo: 910000103,
+                            cancelledDoc: 920000103,
+                            customer: 1000234,
+                            cancelDate: '03/10/2026',
+                            amount: 9700,
+                            cancelReason: 'Wrong Customer'
+                        },
+                        {
+                            invoiceNo: 910000104,
+                            cancelledDoc: 920000104,
+                            customer: 1000678,
+                            cancelDate: '03/11/2026',
+                            amount: 15600,
+                            cancelReason: 'Material Return'
+                        },
+                        {
+                            invoiceNo: 910000105,
+                            cancelledDoc: 920000105,
+                            customer: 1000451,
+                            cancelDate: '03/11/2026',
+                            amount: 3400,
+                            cancelReason: 'Pricing Error'
+                        },
+                        {
+                            invoiceNo: 910000106,
+                            cancelledDoc: 920000106,
+                            customer: 1000890,
+                            cancelDate: '03/12/2026',
+                            amount: 8250,
+                            cancelReason: 'Duplicate Billing'
+                        }
+                    ]
                 }
             ],
             financial: [
@@ -154,14 +533,130 @@
                     value: 22,
                     unit: 'M',
                     status: 'warning',
-                    table: 'ACDOCA'
+                    table: 'ACDOCA',
+                    columns: [
+                        { key: 'salesOrg', label: 'Sales Org' },
+                        { key: 'distributionChannel', label: 'Distribution Channel' },
+                        { key: 'division', label: 'Divison' },
+                        { key: 'openOrders', label: 'Open Orders' },
+                        { key: 'totalValue', label: 'Total Value' },
+                        { key: 'currency', label: 'Currency' }
+                    ],
+                    records: [
+                        {
+                            salesOrg: '1000',
+                            distributionChannel: '10',
+                            division: '01',
+                            openOrders: 58,
+                            totalValue: 4200000,
+                            currency: 'USD'
+                        },
+                        {
+                            salesOrg: '1000',
+                            distributionChannel: '20',
+                            division: '01',
+                            openOrders: 44,
+                            totalValue: 3150000,
+                            currency: 'USD'
+                        },
+                        {
+                            salesOrg: '1100',
+                            distributionChannel: '10',
+                            division: '02',
+                            openOrders: 37,
+                            totalValue: 2860000,
+                            currency: 'USD'
+                        },
+                        {
+                            salesOrg: '1200',
+                            distributionChannel: '10',
+                            division: '01',
+                            openOrders: 29,
+                            totalValue: 1980000,
+                            currency: 'USD'
+                        },
+                        {
+                            salesOrg: '1300',
+                            distributionChannel: '30',
+                            division: '03',
+                            openOrders: 21,
+                            totalValue: 1490000,
+                            currency: 'USD'
+                        },
+                        {
+                            salesOrg: '1400',
+                            distributionChannel: '10',
+                            division: '02',
+                            openOrders: 18,
+                            totalValue: 1220000,
+                            currency: 'USD'
+                        }
+                    ]
                 },
                 {
                     title: 'Billing Due Date',
                     value: 78,
                     unit: '',
                     status: 'critical',
-                    table: 'ACDOCA'
+                    table: 'ACDOCA',
+                    columns: [
+                        { key: 'billingDocRef', label: 'Billing Doc Ref' },
+                        { key: 'customer', label: 'Customer' },
+                        { key: 'dueDate', label: 'Due Date' },
+                        { key: 'amountDue', label: 'Amount Due' },
+                        { key: 'currency', label: 'Currency' },
+                        { key: 'agingDays', label: 'Aging Days' }
+                    ],
+                    records: [
+                        {
+                            billingDocRef: 930000201,
+                            customer: 1000456,
+                            dueDate: '03/14/2026',
+                            amountDue: 12500,
+                            currency: 'USD',
+                            agingDays: 0
+                        },
+                        {
+                            billingDocRef: 930000202,
+                            customer: 1000789,
+                            dueDate: '03/13/2026',
+                            amountDue: 8400,
+                            currency: 'USD',
+                            agingDays: 1
+                        },
+                        {
+                            billingDocRef: 930000203,
+                            customer: 1000234,
+                            dueDate: '03/12/2026',
+                            amountDue: 16450,
+                            currency: 'USD',
+                            agingDays: 2
+                        },
+                        {
+                            billingDocRef: 930000204,
+                            customer: 1000678,
+                            dueDate: '03/11/2026',
+                            amountDue: 5100,
+                            currency: 'USD',
+                            agingDays: 3
+                        },
+                        {
+                            billingDocRef: 930000205,
+                            customer: 1000451,
+                            dueDate: '03/10/2026',
+                            amountDue: 9100,
+                            currency: 'USD',
+                            agingDays: 4
+                        },
+                        {
+                            billingDocRef: 930000206,
+                            customer: 1000890,
+                            dueDate: '03/14/2026',
+                            amountDue: 14300,
+                            currency: 'USD',
+                            agingDays: 0
+                        }
+                    ]
                 }
             ],
             logistics: [
@@ -170,14 +665,130 @@
                     value: 12,
                     unit: '',
                     status: 'warning',
-                    table: 'LIKP'
+                    table: 'LIKP',
+                    columns: [
+                        { key: 'deliveryNo', label: 'Delivery No' },
+                        { key: 'salesOrder', label: 'Sales Order' },
+                        { key: 'customer', label: 'Customer' },
+                        { key: 'plannedDate', label: 'Planned Date' },
+                        { key: 'actualDate', label: 'Actual Date' },
+                        { key: 'delayDays', label: 'Delays Days' }
+                    ],
+                    records: [
+                        {
+                            deliveryNo: 800013101,
+                            salesOrder: 4500012601,
+                            customer: 1000456,
+                            plannedDate: '03/10/2026',
+                            actualDate: '03/12/2026',
+                            delayDays: 2
+                        },
+                        {
+                            deliveryNo: 800013102,
+                            salesOrder: 4500012602,
+                            customer: 1000789,
+                            plannedDate: '03/09/2026',
+                            actualDate: '03/11/2026',
+                            delayDays: 2
+                        },
+                        {
+                            deliveryNo: 800013103,
+                            salesOrder: 4500012603,
+                            customer: 1000234,
+                            plannedDate: '03/08/2026',
+                            actualDate: '03/12/2026',
+                            delayDays: 4
+                        },
+                        {
+                            deliveryNo: 800013104,
+                            salesOrder: 4500012604,
+                            customer: 1000678,
+                            plannedDate: '03/11/2026',
+                            actualDate: '03/13/2026',
+                            delayDays: 2
+                        },
+                        {
+                            deliveryNo: 800013105,
+                            salesOrder: 4500012605,
+                            customer: 1000451,
+                            plannedDate: '03/12/2026',
+                            actualDate: '03/14/2026',
+                            delayDays: 2
+                        },
+                        {
+                            deliveryNo: 800013106,
+                            salesOrder: 4500012606,
+                            customer: 1000890,
+                            plannedDate: '03/07/2026',
+                            actualDate: '03/10/2026',
+                            delayDays: 3
+                        }
+                    ]
                 },
                 {
                     title: 'Orders Awaiting Delivery',
                     value: 55,
                     unit: '',
                     status: 'critical',
-                    table: 'LIPS'
+                    table: 'LIPS',
+                    columns: [
+                        { key: 'salesOrder', label: 'Sales Order' },
+                        { key: 'customer', label: 'Customer' },
+                        { key: 'orderDate', label: 'Order Date' },
+                        { key: 'requestedDeliveryDate', label: 'Requested Delivery Date' },
+                        { key: 'plant', label: 'Plant' },
+                        { key: 'deliveryBlock', label: 'Delivery Block' }
+                    ],
+                    records: [
+                        {
+                            salesOrder: 4500012701,
+                            customer: 1000456,
+                            orderDate: '03/09/2026',
+                            requestedDeliveryDate: '03/14/2026',
+                            plant: 'PL01',
+                            deliveryBlock: 'No'
+                        },
+                        {
+                            salesOrder: 4500012702,
+                            customer: 1000789,
+                            orderDate: '03/10/2026',
+                            requestedDeliveryDate: '03/15/2026',
+                            plant: 'PL02',
+                            deliveryBlock: 'No'
+                        },
+                        {
+                            salesOrder: 4500012703,
+                            customer: 1000234,
+                            orderDate: '03/10/2026',
+                            requestedDeliveryDate: '03/16/2026',
+                            plant: 'PL01',
+                            deliveryBlock: 'Yes'
+                        },
+                        {
+                            salesOrder: 4500012704,
+                            customer: 1000678,
+                            orderDate: '03/11/2026',
+                            requestedDeliveryDate: '03/17/2026',
+                            plant: 'PL03',
+                            deliveryBlock: 'No'
+                        },
+                        {
+                            salesOrder: 4500012705,
+                            customer: 1000451,
+                            orderDate: '03/11/2026',
+                            requestedDeliveryDate: '03/18/2026',
+                            plant: 'PL02',
+                            deliveryBlock: 'No'
+                        },
+                        {
+                            salesOrder: 4500012706,
+                            customer: 1000890,
+                            orderDate: '03/12/2026',
+                            requestedDeliveryDate: '03/19/2026',
+                            plant: 'PL01',
+                            deliveryBlock: 'Yes'
+                        }
+                    ]
                 }
             ],
             risk: [
@@ -186,14 +797,130 @@
                     value: 67,
                     unit: '',
                     status: 'warning',
-                    table: 'ACDOCA'
+                    table: 'ACDOCA',
+                    columns: [
+                        { key: 'salesOrder', label: 'Sales Order' },
+                        { key: 'customer', label: 'Customer' },
+                        { key: 'creditControlArea', label: 'Credit Control Area' },
+                        { key: 'riskCategory', label: 'Risk Category' },
+                        { key: 'blockedAmount', label: 'Blocked Amount' },
+                        { key: 'blockStatus', label: 'Block Status' }
+                    ],
+                    records: [
+                        {
+                            salesOrder: 4500012801,
+                            customer: 1000456,
+                            creditControlArea: '1000',
+                            riskCategory: 'HIGH',
+                            blockedAmount: 18400,
+                            blockStatus: 'Credit Blocked'
+                        },
+                        {
+                            salesOrder: 4500012802,
+                            customer: 1000789,
+                            creditControlArea: '1000',
+                            riskCategory: 'MEDIUM',
+                            blockedAmount: 9200,
+                            blockStatus: 'Credit Blocked'
+                        },
+                        {
+                            salesOrder: 4500012803,
+                            customer: 1000234,
+                            creditControlArea: '1100',
+                            riskCategory: 'HIGH',
+                            blockedAmount: 25600,
+                            blockStatus: 'Credit Review'
+                        },
+                        {
+                            salesOrder: 4500012804,
+                            customer: 1000678,
+                            creditControlArea: '1000',
+                            riskCategory: 'LOW',
+                            blockedAmount: 6100,
+                            blockStatus: 'Credit Blocked'
+                        },
+                        {
+                            salesOrder: 4500012805,
+                            customer: 1000451,
+                            creditControlArea: '1200',
+                            riskCategory: 'MEDIUM',
+                            blockedAmount: 14350,
+                            blockStatus: 'Credit Review'
+                        },
+                        {
+                            salesOrder: 4500012806,
+                            customer: 1000890,
+                            creditControlArea: '1000',
+                            riskCategory: 'HIGH',
+                            blockedAmount: 19870,
+                            blockStatus: 'Credit Blocked'
+                        }
+                    ]
                 },
                 {
                     title: 'Returns / Credit Memo',
                     value: 78,
                     unit: '',
                     status: 'critical',
-                    table: 'ACDOCA'
+                    table: 'ACDOCA',
+                    columns: [
+                        { key: 'documentNo', label: 'Sales Order' },
+                        { key: 'customer', label: 'Customer' },
+                        { key: 'documentType', label: 'Document Type' },
+                        { key: 'referenceInvoice', label: 'Reference Invoice' },
+                        { key: 'amount', label: 'Amount' },
+                        { key: 'reasonCode', label: 'Reason Code' }
+                    ],
+                    records: [
+                        {
+                            documentNo: 950000301,
+                            customer: 1000456,
+                            documentType: 'Return',
+                            referenceInvoice: 910000301,
+                            amount: 3200,
+                            reasonCode: 'Damaged Goods'
+                        },
+                        {
+                            documentNo: 950000302,
+                            customer: 1000789,
+                            documentType: 'Credit Memo',
+                            referenceInvoice: 910000302,
+                            amount: 1850,
+                            reasonCode: 'Pricing Difference'
+                        },
+                        {
+                            documentNo: 950000303,
+                            customer: 1000234,
+                            documentType: 'Return',
+                            referenceInvoice: 910000303,
+                            amount: 2760,
+                            reasonCode: 'Wrong Material'
+                        },
+                        {
+                            documentNo: 950000304,
+                            customer: 1000678,
+                            documentType: 'Credit Memo',
+                            referenceInvoice: 910000304,
+                            amount: 4420,
+                            reasonCode: 'Short Shipment'
+                        },
+                        {
+                            documentNo: 950000305,
+                            customer: 1000451,
+                            documentType: 'Return',
+                            referenceInvoice: 910000305,
+                            amount: 3980,
+                            reasonCode: 'Customer Rejection'
+                        },
+                        {
+                            documentNo: 950000306,
+                            customer: 1000890,
+                            documentType: 'Credit Memo',
+                            referenceInvoice: 910000306,
+                            amount: 2140,
+                            reasonCode: 'Billing Correction'
+                        }
+                    ]
                 }
             ]
         };
@@ -217,9 +944,10 @@
 
                 const grid = document.querySelector(`#${category}-grid`);
 
-                kpiData[category].forEach(kpi => {
+                kpiData[category].forEach((kpi, index) => {
                     grid.innerHTML += `
-                        <div class="kpi-card status-${kpi.status}">
+                        <div class="kpi-card status-${kpi.status}"
+                            onclick="showRecords('${category}', ${index})">
                             <p class="kpi-title">${kpi.title}</>
                             <p class="kpi-value">${kpi.value} ${kpi.unit}</>
                             <p class="kpi-table">${kpi.table}</p>
@@ -228,6 +956,80 @@
                 });
 
             });
+
+        }
+
+        // ============================
+        // SHOW TABLE
+        // ============================
+        function showRecords(category, index) {
+
+            const kpi = kpiData[category][index];
+            const records = kpi.records || [];
+            const columns = kpi.columns || [];
+            const gridTable = document.querySelector(`#${category}-table`);
+
+            if (records.length === 0) {
+                gridTable.innerHTML = '<p style="color:#555;">No records available for ${kpi.title}</p>';
+                return;
+            }
+
+            // Build headers from columns
+            const headers = columns.map(col => `<th>${col.label}</th>`).join('');
+
+            // Build rows from records using column keys
+            const rows = records.map(record => {
+                cells = columns
+                    .map(col => `<td>${record[col.key] ?? '-'}</td>`)
+                    .join('');
+                return `<tr>${cells}</tr>`;
+            }).join('');
+
+            /*
+            // build header
+            let rows = '';
+            records.forEach(r => {
+                rows += `
+                    <tr>
+                        <td>${r.orderNo}</td>
+                        <td>${r.customer}</td>
+                        <td>${r.createdDate}</td>
+                        <td>$${r.netValue.toLocaleString()}</td>
+                        <td>${r.deliveryStatus}</td>
+                        <td>${r.orderStatus}</td>
+                    </tr>
+                `;
+            });
+
+            gridTable.innerHTML = `
+                <h3>${kpi.title} — Records</h3>
+                <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order No</th>
+                            <th>Customer</th>
+                            <th>Created Date</th>
+                            <th>Net Value</th>
+                            <th>Delivery Status</th>
+                            <th>Order Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+                </div>
+            `;
+            */
+
+            gridTable.innerHTML = `
+                <h3>${kpi.title} — Records</h3>
+                <div class="table-container">
+                    <table>
+                        <thead><tr>${headers}</tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
 
         }
 
