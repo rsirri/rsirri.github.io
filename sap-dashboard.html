@@ -5,7 +5,78 @@
     <title>SAP S/4HANA Dashboard</title>
 
     <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #0a0a0a;
+            color: #2E75B6;
+        }
 
+        h1 {
+            color: #2E75B6;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            color: #2E75B6;
+            margin-bottom: 8px;
+        }
+
+        /* card base style */
+        .kpi-card {
+            font-family: 'Courier New', Courier, monospace;
+            background: #111;
+            /* dark surface */
+            border: 1px solid #333;
+            /* subtle border */
+            border-radius: 10px;
+            /* rounded corners */
+            padding: 40px;
+            /* breathing room inside */
+            max-width: 100px;
+            /* not too wide */
+            margin: 40px auto;
+            /* centered on page */
+        }
+
+        /* status colors — use border-left for a professional look */
+        .status-normal {
+            border-left: 4px solid #28a745;
+        }
+
+        .status-warning {
+            border-left: 4px solid #d29922;
+        }
+
+        .status-critical {
+            border-left: 4px solid #f85149;
+        }
+
+        /* grid layout — try this */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-title {
+            font-size: 0.8rem;
+            color: #aaaaaa;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .kpi-table {
+            font-size: 0.7rem;
+            color: #555;
+        }
     </style>
 
 </head>
@@ -51,12 +122,116 @@
                 {
                     title: 'Open Sales Orders',
                     value: 142,
-                    unit: 'Millions',
+                    unit: '',
                     status: 'normal',
                     table: 'VBAK'
+                },
+                {
+                    title: 'Deliveries Due Today',
+                    value: 158,
+                    unit: '',
+                    status: 'warning',
+                    table: 'LIKP'
+                },
+                {
+                    title: 'Pending Invoices',
+                    value: 190,
+                    unit: '',
+                    status: 'critical',
+                    table: 'VBRK'
+                },
+                {
+                    title: 'Cancelled Invoices',
+                    value: 23,
+                    unit: '',
+                    status: 'critical',
+                    table: 'VBRK'
+                }
+            ],
+            financial: [
+                {
+                    title: 'Open Order Value',
+                    value: 22,
+                    unit: 'M',
+                    status: 'warning',
+                    table: 'ACDOCA'
+                },
+                {
+                    title: 'Billing Due Date',
+                    value: 78,
+                    unit: '',
+                    status: 'critical',
+                    table: 'ACDOCA'
+                }
+            ],
+            logistics: [
+                {
+                    title: 'Late Deliveries',
+                    value: 12,
+                    unit: '',
+                    status: 'warning',
+                    table: 'LIKP'
+                },
+                {
+                    title: 'Orders Awaiting Delivery',
+                    value: 55,
+                    unit: '',
+                    status: 'critical',
+                    table: 'LIPS'
+                }
+            ],
+            risk: [
+                {
+                    title: 'Credit Blocked Orders',
+                    value: 67,
+                    unit: '',
+                    status: 'warning',
+                    table: 'ACDOCA'
+                },
+                {
+                    title: 'Returns / Credit Memo',
+                    value: 78,
+                    unit: '',
+                    status: 'critical',
+                    table: 'ACDOCA'
                 }
             ]
         };
+
+        // ============================
+        // GET DATA TO DISPLAY
+        // ============================
+        function renderKPIs() {
+
+            const date = new Date(Date.now());
+            const formattedDate = date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.querySelector('#last-updated').innerHTML = formattedDate;
+
+            Object.keys(kpiData).forEach(category => {
+
+                const grid = document.querySelector(`#${category}-grid`);
+
+                kpiData[category].forEach(kpi => {
+                    grid.innerHTML += `
+                        <div class="kpi-card status-${kpi.status}">
+                            <p class="kpi-title">${kpi.title}</>
+                            <p class="kpi-value">${kpi.value} ${kpi.unit}</>
+                            <p class="kpi-table">${kpi.table}</p>
+                        </div>
+                    `;
+                });
+
+            });
+
+        }
+
+        renderKPIs();
 
     </script>
 
